@@ -11,19 +11,20 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/user")
 public class UserController {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+
 
     @PostMapping("/join")
     public ResponseEntity join(@RequestBody @Valid UserRequest.JoinDTO requestDTO, Error error){
@@ -40,6 +41,7 @@ public class UserController {
         if(byEmail.isPresent()){
             throw new Exception400("이미 존재하는 email 입니다" + requestDTO.getEmail());
         }
+
 
         // ** password 인코딩
 

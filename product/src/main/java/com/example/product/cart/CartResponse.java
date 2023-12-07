@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 
 public class CartResponse {
 
+
+    // ** UpdateDTO: Cart의 업데이트 요청을 처리하기 위해 사용되며 생성자에서는 장바구니 리스트를 받아 각 장바구니를 CartDTO로 변환한 후 dtoList에 저장.
     @Setter
     @Getter
     public static class UpdateDTO{
@@ -51,6 +53,7 @@ public class CartResponse {
     }
 
 
+    // ** Cart 모든 항목을 조회하여 요청하기 위해 사용됨.생성자에서는 장바구니 리스트를 받아 각 장바구니를 CartDTO로 변환한 후 dtoList에 저장합니다.
     @Setter
     @Getter
     public static class FindAllDTO {
@@ -74,6 +77,8 @@ public class CartResponse {
                     .sum();
         }
 
+        // 상품과 그 상품에 관련된 장바구니 항목들을 나타내는 DTO입니다. 상품 ID, 상품 이름, 장바구니 항목들을 나타내는
+        // CartDTO의 리스트를 필드로 가집니다. 생성자에서는 장바구니 리스트와 상품 엔티티를 받아 필드값을 설정합니다.
         @Setter
         @Getter
         public class ProductDTO {
@@ -91,6 +96,7 @@ public class CartResponse {
                         .filter(cart -> cart.getOption().getProduct().getId() == product.getId())
                         .map(CartDTO::new).collect(Collectors.toList());
             }
+            // 장바구니의 각 항목을 나타내는 DTO입니다. 장바구니 ID, 옵션 DTO, 수량, 가격을 필드로 가집니다. 생성자에서는 장바구니 엔티티를 받아 필드값을 설정합니다.
             @Setter
             @Getter
             public class CartDTO{
@@ -108,6 +114,7 @@ public class CartResponse {
                     this.price = cart.getPrice();
                 }
 
+                // 옵션을 나타내는 DTO입니다. 옵션 ID, 옵션 이름, 가격을 필드로 가집니다. 생성자에서는 옵션 엔티티를 받아 필드값을 설정합니다.
                 @Setter
                 @Getter
                 public class OptionDTO{

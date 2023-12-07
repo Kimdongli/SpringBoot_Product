@@ -42,6 +42,7 @@ public class OptionResponse {
         // 옵션 상품 수량
         private Long quantity;
 
+        // 이 생성자는 Option 객체를 FindByProductIdDTD 객체로 변환합니다.
         public FindByProductIdDTD(Option option){
             this.id = option.getId();
             this.productId = option.getProduct().getId();
@@ -51,6 +52,7 @@ public class OptionResponse {
         }
     }
 
+    // 'FindAllDTO'는 모든 옵션을 찾을 때 사용되는 Data Transfer Object입니다.
     @Setter
     @Getter
     @NoArgsConstructor
@@ -68,6 +70,7 @@ public class OptionResponse {
         // 옵션 상품 수량
         private Long quantity;
 
+        // 이 생성자는 Option 객체를 FindAllDTO 객체로 변환합니다.
         public FindAllDTO(Option option){
             this.id = option.getId();
             this.productId = option.getProduct().getId();
@@ -77,6 +80,7 @@ public class OptionResponse {
         }
     }
 
+    // 'CreateDTO'는 새로운 옵션을 생성할 때 사용되는 Data Transfer Object입니다.
     @Setter
     @Getter
     public static class CreateDTO{
@@ -92,6 +96,7 @@ public class OptionResponse {
         private Long quantity;
 
         private Long product;
+        // 이 생성자는 Option 객체를 CreateDTO 객체로 변환합니다.
         public CreateDTO(Option option){
             this.id = option.getId();
             this.product = option.getProduct().getId();
@@ -99,6 +104,8 @@ public class OptionResponse {
             this.price = option.getPrice();
             this.quantity= option.getQuantity();
         }
+        // 'toEntity' 메소드는 'CreateDTO' 객체를 'Option' 엔티티로 변환합니다.
+        // 이 메소드는 옵션을 생성할 때 사용됩니다.
         public Option toEntity(ProductRepository productRepository) {
             Product product = productRepository.findById(this.product)
                     .orElseThrow(() -> new IllegalArgumentException("Invalid product Id:" + this.product));

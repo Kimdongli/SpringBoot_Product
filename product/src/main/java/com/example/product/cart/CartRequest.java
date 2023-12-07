@@ -13,6 +13,8 @@ public class CartRequest {
         private Long optionId;
         private Long quantity;
 
+        // 'toEntity' 메소드는 'SaveDTO' 객체를 'Cart' 엔티티로 변환합니다.
+        // 이 메소드는 장바구니에 상품을 추가할 때 사용됩니다.
         public Cart toEntity(Option option, User user){
 
             return Cart.builder()
@@ -24,6 +26,7 @@ public class CartRequest {
         }
     }
 
+    // 'UpdateDTO'는 장바구니의 상품 수량을 업데이트할 때 사용되는 Data Transfer Object입니다.
     @Getter
     @Setter
     public static class UpdateDTO{
