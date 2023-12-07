@@ -28,13 +28,13 @@ public class OrderController {
     public ResponseEntity<?> findById(@PathVariable Long id){
         OrderResponse.FindByIdDTO findByIdDTO = orderService.findById(id);
         ApiUtils.ApiResult<?> apiResult = ApiUtils.success(findByIdDTO);
-        return ResponseEntity.ok(ApiUtils.success(apiResult));
+        return ResponseEntity.ok(apiResult);
     }
 
     @PostMapping("/orders/clear")
     public ResponseEntity<?> clear(){
         orderService.clear();
         ApiUtils.ApiResult<?> apiResult = ApiUtils.success(null);
-        return ResponseEntity.ok(ApiUtils.success(apiResult));
+        return ResponseEntity.ok(apiResult);
     }
 }

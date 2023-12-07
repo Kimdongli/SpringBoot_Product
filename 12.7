@@ -250,7 +250,7 @@ public class OrderService {
 public ResponseEntity<?> findById(@PathVariable Long id){
     OrderResponse.FindByIdDTO findByIdDTO = orderService.findById(id);
     ApiUtils.ApiResult<?> apiResult = ApiUtils.success(null);
-    return ResponseEntity.ok(ApiUtils.success(apiResult));
+    return ResponseEntity.ok(apiResult);
 }
 ```
 + __주문 결과 확인을위한 메소드를 만들기위해 Service에 findById를 만들어야한다.__
@@ -272,7 +272,7 @@ public OrderResponse.FindByIdDTO findById(Long id) {
     public ResponseEntity<?> clear(){
         orderService.clear();
         ApiUtils.ApiResult<?> apiResult = ApiUtils.success(null);
-        return ResponseEntity.ok(ApiUtils.success(apiResult));
+        return ResponseEntity.ok(apiResult);
     }
 ```
 
