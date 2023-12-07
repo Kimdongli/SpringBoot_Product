@@ -118,6 +118,7 @@ public class OptionResponse {
 
 ### OptionService
 ```java
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class OptionService {

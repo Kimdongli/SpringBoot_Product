@@ -14,6 +14,7 @@ import java.util.Collections;
 @Getter
 public class CustomUserDetails implements UserDetails {
 
+    // ** anonymousUser = 비인증
     private final User user;
 
     @Override

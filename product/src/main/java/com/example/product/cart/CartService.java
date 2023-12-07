@@ -50,7 +50,7 @@ public class CartService {
             return cartDTO.toEntity(option, user);
         }).collect(Collectors.toList());
 
-        // ** 상품 오류
+        // ** 상품 DB 오류
         cartList.forEach(cart -> {
 
             try {

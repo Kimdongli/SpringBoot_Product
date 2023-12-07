@@ -1,0 +1,287 @@
+## Product(4)
+
+### Cart
+```java
+@NoArgsConstructor
+@Getter
+@Entity
+@Table(name ="cart_tb",
+        indexes = {
+                @Index(name = "cart_user_id_idx", columnList = "user_id"),
+                @Index(name = "cart_option_id_idx", columnList = "option_id"),
+        },
+        // ** 고유값 설정
+        uniqueConstraints = {
+            @UniqueConstraint(name = "uk_cart_option_user", columnNames = {"user_id","option_id"})
+        })
+public class Cart {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // ** user별로 카트에 묶임
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Option option;
+
+    // Cart 안에 들어가 있는 총 수량
+    @Column(length = 100, nullable = false)
+    private Long quantity;
+
+    // Cart 안에 들어가 있는 총 가격
+    @Column(nullable = false)
+    private Long price;
+
+
+    @Builder
+    public Cart(Long id, User user, Option option, Long quantity, Long price) {
+        this.id = id;
+        this.user = user;
+        this.option = option;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
+    public void update(Long quantity, Long price){
+        this.quantity = quantity;
+        this.price = price;
+    }
+}
+```
++ __Table 설정 추가__
+
+
+## Order 기능
++ __Order,OrderController,OrderRepository,OrderService,OrderResponse 클래스 추가__
+
+### Order
+```java
+@NoArgsConstructor
+@Getter
+@Entity
+public class Order {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
+    @Builder
+    public Order(Long id, User user) {
+        this.id = id;
+        this.user = user;
+    }
+}
+```
+
+### OrderController
+```java
+@PostMapping("/orders/save")
+    public ResponseEntity<?> save(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        OrderResponse.FindByIdDTO findByIdDTO = orderService.save(customUserDetails.getUser());
+        return ResponseEntity.ok(ApiUtils.success(findByIdDTO));
+    }
+```
+
++ __save 메소드를 만들어주는데 save메소드안에 FindByIdDTO,save를 각자위치에 만들어준다__
+
+### OrderRepository
+```java
+public interface OrderRepository extends JpaRepository<Order, Long> {
+}
+```
+
+### OrderResponse
+```java
+    @Setter
+    @Getter
+    public static class FindByIdDTO{
+        private Long id;
+        private List<ProductDTO> productDTOS;
+        private Long totalPrice;
+
+
+        public FindByIdDTO(Order order, List<Item> itemList) {
+            this.id = order.getId();
+            this.productDTOS = itemList.stream()
+                    .map(item -> item.getOption().getProduct()).distinct()
+                    .map(product -> new ProductDTO(itemList,product)).collect(Collectors.toList());
+
+            this.totalPrice = itemList.stream().mapToLong(item-> item.getOption().getPrice() * item.getQuantity()).sum();
+        }
+
+        @Getter
+        @Setter
+        public class ProductDTO{
+            private String productName;
+            private List<ItemDTO> items;
+
+            public ProductDTO(List<Item> items, Product product) {
+                this.productName = product.getProductName();
+                this.items = items.stream()
+                        .filter(item-> item.getOption().getProduct().getId() == product.getId())
+                        .map(ItemDTO::new)
+                        .collect(Collectors.toList());
+            }
+
+            @Setter
+            @Getter
+            public class ItemDTO{
+                private Long id;
+                private String optionName;
+                private Long quantity;
+                private Long price;
+
+                public ItemDTO(Item item) {
+                    this.id = item.getId();
+                    this.optionName = item.getOption().getOptionName();
+                    this.quantity = item.getQuantity();
+                    this.price = item.getPrice();
+                }
+            }
+        }
+    }
+```
++ __OrderResponse만들어주는데 productDTOS,totalPrice 들고오기 위해서 order패키지안에 item패키지를 만들어준다__
+
+## Itme(order패키지안)
+
+### Item
+```java
+@NoArgsConstructor
+@Entity
+@Getter
+public class Item {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Option option;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Order order;
+
+    @Column(nullable = false)
+    private Long quantity;
+
+    @Column(nullable = false)
+    private Long price;
+}
+
+@Builder
+    public Item(Long id, Option option, Order order, Long quantity, Long price) {
+        this.id = id;
+        this.option = option;
+        this.order = order;
+        this.quantity = quantity;
+        this.price = price;
+    }
+```
++ __Item 컬럼들추가 및 빌더추가__
+
+### ItemRepository
+```java
+public interface ItemRepository extends JpaRepository<Item, Long> {
+}
+```
+
+### OrderService
+```java
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
+@Service
+public class OrderService {
+
+    private final OrderRepository orderRepository;
+    private final CartRepository cartRepository;
+    private final ItemRepository itemRepository;
+
+
+    public OrderResponse.FindByIdDTO save(User user) {
+        // ** 장바구니 조회.
+        List<Cart> cartList = cartRepository.findAllByUserId(user.getId());
+
+        if (cartList.size() == 0){
+            throw new Exception404("장바구니에 상품 내역이 존재하지 않습니다.");
+        }
+
+        // ** 주문 생성(여기로 넘어왔으면 상품내역 존재)
+        Order order = orderRepository.save(
+                Order.builder().user(user).build());
+
+        // ** 아이템 저장
+        List<Item> itemList = new ArrayList<>();
+
+        for (Cart cart : cartList){
+            Item item = Item.builder()
+                    .option(cart.getOption())
+                    .order(order)
+                    .quantity(cart.getQuantity())
+                    .price(cart.getOption().getPrice()*cart.getQuantity())
+                    .build();
+
+            itemList.add(item);
+        }
+        try {
+            // itemList 전부 저장
+            itemRepository.saveAll(itemList);
+        }catch (Exception e){
+            throw new Exception500("결제 실패");
+        }
+    }
+```
+
++ __결제 시도 했을때 실행__
++ __결제 할떄는 따로 테이블을 만들어야한다.__
+
+
+
+### OrderController(주문 확인 기능)
+```java
+@GetMapping("/orders/{id}")
+public ResponseEntity<?> findById(@PathVariable Long id){
+    OrderResponse.FindByIdDTO findByIdDTO = orderService.findById(id);
+    ApiUtils.ApiResult<?> apiResult = ApiUtils.success(null);
+    return ResponseEntity.ok(ApiUtils.success(apiResult));
+}
+```
++ __주문 결과 확인을위한 메소드를 만들기위해 Service에 findById를 만들어야한다.__
+
+### OrderService
+```java
+public OrderResponse.FindByIdDTO findById(Long id) {
+    Order order = orderRepository.findById(id).orElseThrow(
+            () -> new Exception404("해당 주문 내역을 찾을 수 없습니다."+id));
+
+    List<Item> itemList = itemRepository.findAllByOrderId(id);
+    return new OrderResponse.FindByIdDTO(order,itemList);
+}
+```
+
+### OrderController(삭제 기능)
+```java
+@PostMapping("/orders/clear")
+    public ResponseEntity<?> clear(){
+        orderService.clear();
+        ApiUtils.ApiResult<?> apiResult = ApiUtils.success(null);
+        return ResponseEntity.ok(ApiUtils.success(apiResult));
+    }
+```
+
+### OrderService(삭제 기능)
+```java
+public void clear() {
+    try {
+        itemRepository.deleteAll();
+    }catch (Exception e){
+        throw new Exception500("아이템 삭제 오류 : " + e.getMessage());
+    }
+```

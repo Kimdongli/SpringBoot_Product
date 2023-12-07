@@ -15,18 +15,15 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RestController
+@RestController("/carts")
 public class CartController {
 
     private final CartService cartService;
 
 
-    // ** 카트에 상품 추가.
-
-
     // ** 카트 전체 상품 확인.
-    // 인증 받지 않으면 즉시 401 에러가 뜬다.
-    @GetMapping("/carts")
+    // ** 인증 받지 않으면 즉시 401 에러가 뜬다.(CustomUserDetails)
+    @GetMapping("/")
     public ResponseEntity<?> carts(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         CartResponse.FindAllDTO findAllDTO = cartService.findAll();
 
@@ -34,18 +31,22 @@ public class CartController {
         return ResponseEntity.ok(apiResult);
     }
 
-    @PostMapping("/carts/add")
+    // ** 카트에 상품 추가.
+    @PostMapping("/add")
     public ResponseEntity<?> addCartList(
             @RequestBody @Valid List<CartRequest.SaveDTO> requestDTO,
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             Error error) {
-
+        // ** 유저 정보 받아온다.
         cartService.addCartList(requestDTO, customUserDetails.getUser());
+
         ApiUtils.ApiResult<?> apiResult = ApiUtils.success(null);
         return ResponseEntity.ok(apiResult);
     }
 
-    @GetMapping("/carts/update")
+
+    // ** 카트 업데이트
+    @GetMapping("/update")
     public ResponseEntity<?> update(
           @RequestBody @Valid List<CartRequest.UpdateDTO> requestDTO,
           @AuthenticationPrincipal CustomUserDetails customUserDetails,
