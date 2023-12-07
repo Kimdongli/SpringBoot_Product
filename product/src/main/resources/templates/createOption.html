@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Option</title>
+    <script>
+        function createOption(event) {
+            event.preventDefault();
+
+            var optionName = document.getElementById('optionName').value;
+            var price = document.getElementById('price').value;
+            var quantity = document.getElementById('quantity').value;
+            var productId = document.getElementById('productId').value;
+
+            fetch('/options/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    optionName: optionName,
+                    price: price,
+                    quantity: quantity,
+                    product: productId
+                })
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+        }
+    </script>
+</head>
+<body>
+<h1>Create Option</h1>
+<form onsubmit="createOption(event)">
+
+    <label for="productId">Product ID:</label><br>
+    <input type="number" id="productId" name="productId"><br>
+
+    <label for="optionName">Option Name:</label><br>
+    <input type="text" id="optionName" name="optionName"><br>
+
+    <label for="price">Price:</label><br>
+    <input type="number" id="price" name="price"><br>
+
+    <label for="quantity">Quantity:</label><br>
+    <input type="number" id="quantity" name="quantity"><br>
+
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>

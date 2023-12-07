@@ -1,0 +1,370 @@
+## Product(3)
+
+## Cart기능
+
+- __Cart Option 연관 관계가 OneToOne 이다__
+
+### Cart
+```java
+@NoArgsConstructor
+@Getter
+@Entity
+public class Cart {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+
+    //private User user;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Option option;
+
+    // Cart 안에 들어가 있는 총 수량
+    @Column(length = 100, nullable = false)
+    private Long quantity;
+
+    // Cart 안에 들어가 있는 총 가격
+    @Column(nullable = false)
+    private Long price;
+
+
+    // Builder 추가
+    @Builder
+    public Cart(Long id, Option option, Long quantity, Long price) {
+        this.id = id;
+        this.option = option;
+        this.quantity = quantity;
+        this.price = price;
+    }
+}
+```
+
+
+### CartResponse
+```java
+public class CartResponse {
+
+
+    @Setter
+    @Getter
+    public static class FindAllDTO {
+        List<ProductDTO> products;
+
+        private Long totalPrice;
+
+        // 전체 원소중에 하나 원소가 이렇게 작동할것이다.(람다식)
+        // ** 1. 최초로 Cart(Entity)로 받는다.
+        // ** 2. Cart(Entity) Option 이 있고
+        // ** 3. Option안에는 Product가있다.
+        // ** new ProductDTO(product) 가 밑에 있는 ProductDTO 와 맞아 떨어져야한다.
+        public FindAllDTO(List<Cart> cartList) {
+            this.products = cartList.stream()
+                    .map(cart -> cart.getOption().getProduct()).distinct()
+                    .map(product -> new ProductDTO(cartList, product)).collect(Collectors.toList());
+
+
+            this.totalPrice = cartList.stream()
+                    .mapToLong(cart -> cart.getOption().getPrice() * cart.getQuantity())
+                    .sum();
+        }
+
+        @Setter
+        @Getter
+        public class ProductDTO {
+            private Long id;
+
+            private String productName;
+
+
+            List<CartDTO> cartDTOS;
+
+            public ProductDTO(List<Cart> cartList,Product product) {
+                this.id = product.getId();
+                this.productName = product.getProductName();
+                this.cartDTOS = cartList.stream()
+                        .filter(cart -> cart.getOption().getProduct().getId() == product.getId())
+                        .map(CartDTO::new).collect(Collectors.toList());
+            }
+            @Setter
+            @Getter
+            public class CartDTO{
+                private Long id;
+
+                private OptionDTO optionDTO;
+
+                private Long quantity;
+                private Long price;
+
+                public CartDTO(Cart cart) {
+                    this.id = cart.getId();
+                    this.quantity= cart.getQuantity();
+                    this.optionDTO = new OptionDTO(cart.getOption());
+                    this.price = cart.getPrice();
+                }
+
+                @Setter
+                @Getter
+                public class OptionDTO{
+
+                    private Long id;
+                    private String optionName;
+                    private Long price;
+
+                    public OptionDTO(Option option) {
+                        this.id = option.getId();
+                        this.optionName = option.getOptionName();
+                        this.price = option.getPrice();
+                    }
+                }
+            }
+        }
+    }
+}
+```
+- __@AuthenticationPrincipal 재 인증된 사용자의 정보를 가져올 때 사용됩니다.__
+- __현재 ProductDTO를 만든이유는 Cart정보가 없기때문이다.__
+- __ProductDTO,CartDTO는 내부에서 사용할것이기 때문에 static을 빼준다.__
+- __FindAllDTO 안에 ProductDTO를 만들고 그 안에 CartDTO를 만든다.__
+- __브릿지 패턴은아니지만 비슷한 패턴은아니다.__
+
+
+### CartService
+```java
+@Service
+@RequiredArgsConstructor
+public class CartService {
+
+    private final CartRepository cartRepository;
+
+    public CartResponse.FindAllDTO findAll() {
+        List<Cart> cartList = cartRepository.findAll();
+
+        return new CartResponse.FindAllDTO(cartList);
+    }
+}
+```
+
+
+### Service
+```java
+@Transactional
+   public void addCartList(List<CartResponse.SaveDTO> saveDTOS, User user) {
+       Set<Long> optionsId = new HashSet<>();
+
+       for(CartResponse.SaveDTO cart: saveDTOS){
+           if(!optionsId.add(cart.getOptionId()));
+           throw new Exception400("동일한 옵션의 중복" + cart.getOptionId());
+       }
+
+       List<Cart> cartList = saveDTOS.stream().map(cartDTO->{
+           Option option = optionRepository.findById(cartDTO.getOptionId()).orElseThrow(
+                   () -> new Exception404("해당 상품 옵션을 찾을 수 없습니다." + cartDTO.getOptionId())
+           );
+
+           return cartDTO.toEntity(option, user);
+       }).collect(Collectors.toList());
+       cartList.forEach(cart -> {
+           // 예외 처리
+           try {
+               cartRepository.save(cart);
+           }catch (Exception e){
+               throw new Exception500("카트에 담던 중 오류가 발생했습니다."+e.getMessage());
+           }
+       });
+   }
+```
++ addCartList 메서드 추가하였다.
+
+
+### Controller
+```java
+@PostMapping("/carts/add")
+    public ResponseEntity<?> addCartList(
+            @RequestBody @Valid List<CartResponse.SaveDTO> saveDTOS,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            Error error) {
+
+        cartService.addCartList(saveDTOS, customUserDetails.getUser());
+        ApiUtils.ApiResult<?> apiResult = ApiUtils.success(null);
+        return ResponseEntity.ok(apiResult);
+    }
+```
++ __Controller에도 Service에 적어둔 addCartList를 이용하여 addCartList  작성하였다.__
+
+### Request
+```java
+@Getter
+@Setter
+public static class SaveDTO{
+    private Long optionId;
+    private Long quantity;
+
+    public Cart toEntity(Option option, User user){
+
+        return Cart.builder()
+                .option(option)
+                .quantity(quantity)
+                .price(option.getPrice() * quantity)
+                .build();
+    }
+}
+```
+- __Response에 있는 메서드를 Request 클래스를 만들어서 Request안에 메서드를 추가한다.__
+- __이유는 코드 가독성을 위해서__
+
+
+### Cart
+```java
+@NoArgsConstructor
+@Getter
+@Entity
+public class Cart {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // ** user별로 카트에 묶임
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Option option;
+
+    // Cart 안에 들어가 있는 총 수량
+    @Column(length = 100, nullable = false)
+    private Long quantity;
+
+    // Cart 안에 들어가 있는 총 가격
+    @Column(nullable = false)
+    private Long price;
+
+
+    @Builder
+    public Cart(Long id, User user, Option option, Long quantity, Long price) {
+        this.id = id;
+        this.user = user;
+        this.option = option;
+        this.quantity = quantity;
+        this.price = price;
+    }
+```
++ __Cart에 User 주석처리한거 주석풀고 관계맵핑까 +빌더 재설정__
+
+### Controller
+```java
+@GetMapping("/carts/update")
+   public ResponseEntity<?> update(
+         @RequestBody @Valid List<CartResponse.UpdateDTO> requestDTO,
+         @AuthenticationPrincipal CustomUserDetails customUserDetails,
+         Error error) {
+       CartResponse.UpdateDTO updateDTO = cartService.update(requestDTO, customUserDetails.getUser());
+
+       ApiUtils.ApiResult<?> apiResult = ApiUtils.success(updateDTO);
+       return ResponseEntity.ok(apiResult);
+   }
+```
++ __update 기능 추가__
+
+### Response
+```java
+@Setter
+@Getter
+public static class UpdateDTO{
+    private List<CartDTO> dtoList;
+
+    private Long totalPrice;
+
+    public UpdateDTO(List<Cart> dtoList) {
+        this.dtoList = dtoList.stream().map(CartDTO::new).collect(Collectors.toList());
+        this.totalPrice = totalPrice;
+    }
+
+    @Setter
+    @Getter
+    public class CartDTO{
+        private Long cartId;
+
+        private Long optionId;
+
+        public String optionName;
+
+        private Long quantity;
+
+        private Long price;
+
+        public CartDTO(Cart cart) {
+            this.cartId = cart.getId();
+            this.optionId = cart.getOption().getId();
+            this.optionName = cart.getOption().getOptionName();
+            this.quantity = cart.getQuantity();
+            this.price = cart.getPrice();
+        }
+    }
+}
+```
++ __UpdateDTO클래스 추가하고 그안에 CartDTO추가__
++ __Request 요구 Response 요청__
+
+### Request
+```java
+@Getter
+@Setter
+public static class UpdateDTO{
+    private Long quantity;
+    private Long cartId;
+}
+```
++ __Request에 UpdateDTO추가__
+
+### Service
+```java
+@Transactional
+public CartResponse.UpdateDTO update(List<CartRequest.UpdateDTO> requestDTO, User user) {
+    List<Cart> cartList = cartRepository.findAllByUserId(user.getId());
+
+    List<Long> cartIds = cartList.stream().map(cart -> cart.getId()).collect(Collectors.toList());
+    List<Long> requestIds = requestDTO.stream().map(dto -> dto.getCartId()).collect(Collectors.toList());
+
+    if(cartIds.size() == 0){
+        throw new Exception404("주문 가능한 상품이 없습니다.");
+    }
+
+    if(requestIds.stream().distinct().count() != requestIds.size()){
+        throw new Exception400("동일한 카트 아이디를 주문할 수 없습니다.");
+    }
+    for (Long requestid : requestIds) {
+        if(!cartIds.contains(requestIds)){
+
+            throw new Exception400("카트에 없는 상품은 주문할 수 없습니다." + requestid);
+        }
+    }
+
+    for (CartRequest.UpdateDTO updateDTO : requestDTO){
+        for (Cart cart : cartList){
+            if(cart.getId() == updateDTO.getCartId()){
+                cart.update(updateDTO.getQuantity(), cart.getPrice() * cart.getQuantity());
+            }
+        }
+    }
+    return new CartResponse.UpdateDTO(cartList);
+
+}
+```
+
+### Controller
+```java
+@GetMapping("/carts/update")
+    public ResponseEntity<?> update(
+          @RequestBody @Valid List<CartRequest.UpdateDTO> requestDTO,
+          @AuthenticationPrincipal CustomUserDetails customUserDetails,
+          Error error) {
+        CartResponse.UpdateDTO updateDTO = cartService.update(requestDTO, customUserDetails.getUser());
+
+        ApiUtils.ApiResult<?> apiResult = ApiUtils.success(updateDTO);
+        return ResponseEntity.ok(apiResult);
+    }
+```
++ __Controller에 update메소드 추가__

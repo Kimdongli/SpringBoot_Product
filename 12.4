@@ -1,0 +1,411 @@
+## Product
+
+### 환경설정
+
+- __gradle__
+
+```gradle
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.6'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+java {
+	sourceCompatibility = '11'
+}
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+repositories {
+	mavenCentral()
+}
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	runtimeOnly 'mysql:mysql-connector-java'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+tasks.named('bootBuildImage') {
+	builder = 'paketobuildpacks/builder-jammy-base:latest'
+}
+tasks.named('test') {
+	useJUnitPlatform()
+}
+```
+
+- __yml__
+
+```yml
+server:
+  port: 8080
+
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 50MB
+
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/green?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: 1234
+  thymeleaf:
+    cache: false
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+
+  h2:
+    console:
+      enabled: true
+```
+
+### 코드(Product)
+
+- __1.Entity 생성후 안에컬럼들 작성(Long id,String productName,String description,String image,int price
+,int quantity)__
+
+- Error 코드를 예전에 만들었던 login_Test에서 에러코드와 utils 코드를 들고와서 사용
+
+
+### product
+```java
+package com.example.product.product;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
+@NoArgsConstructor
+@Getter
+@Entity
+public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // ** 상품명, 입력값 필수
+   @Column(length = 100, nullable = false)
+   private String productName;
+
+   // ** 상품 설명, 입력값 필수
+   @Column(length = 500, nullable = false)
+   private String description;
+
+   // ** 이미지 정보
+   @Column(length = 100)
+   private String image;
+
+   // ** 가격
+   private int price;
+
+   // ** 수량
+   private int quantity;
+}
+```
+
+### ProductDTO -> ProductResponse
+```java
+@Getter
+    @Setter
+    public static class FindAllDTO {
+        // ** PK
+        private Long id;
+
+        // ** 상품명
+        private String productName;
+
+        // ** 상품 설명
+        private String description;
+
+        // ** 이미지 정보
+        private String image;
+
+        // ** 가격
+        private int price;
+
+
+        public FindAllDTO(Product product) {
+            this.id = product.getId();
+            this.productName = product.getProductName();
+            this.description = product.getDescription();
+            this.image = product.getImage();
+            this.price = product.getPrice();
+        }
+    }
+
+    @Setter
+    @Getter
+    public static class FindByIdDTO {
+        // ** PK
+        private Long id;
+
+        // ** 상품명
+        private String productName;
+
+        // ** 상품 설명
+        private String description;
+
+        // ** 이미지 정보
+        private String image;
+
+        // ** 가격
+        private int price;
+
+        private List<OptionDTO> optionList;
+
+        public FindByIdDTO(Product product, List<Option> optionList) {
+            this.id = product.getId();
+            this.productName = product.getProductName();
+            this.description = product.getDescription();
+            this.image = product.getImage();
+            this.price = product.getPrice();
+            this.optionList = optionList.stream().map(OptionDTO::new)
+                    .collect(Collectors.toList());
+        }
+    }
+
+    @Setter
+    @Getter
+    public static class OptionDTO{
+        private Long id;
+        private String optionName;
+        private Long price;
+        private Long quantity;
+
+        public OptionDTO(Option option) {
+            this.id = option.getId();
+            this.optionName = option.getOptionName();
+            this.price = option.getPrice();
+            quantity= option.getQuantity();
+        }
+    }
+```
+
+
+- __findAll 메서드 추가__
+### ProductService
+
+- __public List 를 반환하였지만 현재 ProductResponse.FindByIdDTO 여기안에
+리스트를 반환하였기때문에 List를 따로 쓰지않는다.__
+
+```java
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class ProductService {
+    private final ProductRepository productRepository;
+    private final OptionRepository optionRepository;
+
+    // ** 전체 상품 확인
+    public List<ProductResponse.FindAllDTO> findAll(int page) {
+        Pageable pageable = PageRequest.of(page, 3);
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        List<ProductResponse.FindAllDTO> productDTOS =
+                productPage.getContent().stream().map(ProductResponse.FindAllDTO::new)
+                .collect(Collectors.toList());
+
+        return  productDTOS;
+    }
+
+    // ** 개인 상품 확인
+    public ProductResponse.FindByIdDTO findByid(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new Exception404("해당 상품을 찾을 수 없습니다. : "+id));
+        // ** product.getId() 로 Option 상품 검색.
+        List<Option> optionList = optionRepository.findByProductId(product.getId());
+
+        // ** 검색이 완료된 제품 반환.
+        return new ProductResponse.FindByIdDTO(product, optionList);
+    }
+
+
+}
+
+```
+
+- __마찬가지로 ProductController에도 추가한다.__
+### ProductController
+- __마찬가지로 List를 반환할 필요가없으니 ProductResponse.FindByIdDTO로 바꿔준다__
+
+```java
+@RequiredArgsConstructor
+@RestController
+public class ProductController {
+    private final ProductService productService;
+
+    // ** 전체 상품 확인
+    @GetMapping("/products")
+    public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page ){
+        List<ProductResponse.FindAllDTO> productDTOS = productService.findAll(page);
+        ApiUtils.ApiResult<?> apiResult = ApiUtils.success(productDTOS);
+        return ResponseEntity.ok(apiResult);
+    }
+
+    // ** 개인 상품 확인
+    @GetMapping("/products/{id}")
+    public ResponseEntity<?> findByid(@PathVariable Long id){
+        ProductResponse.FindByIdDTO productDTOS = productService.findByid(id);
+        ApiUtils.ApiResult<?> apiResult = ApiUtils.success(productDTOS);
+        return ResponseEntity.ok(apiResult);
+    }
+}
+```
+
+- __상품을 찾았지만 안에있는 상품은 하나가 아닐수가있다. 하지만 원래는 옵션에있어야하는 기능이기때문에
+연관관계 맵핑을 해야한다.__
+
+### 코드(Option)
+
+### Option
+- __option이라는 예약어가있으므로 테이블 이름설정해준__
+
+```java
+@NoArgsConstructor
+@Getter
+@Entity
+@Table(name = "option_tb")
+public class Option {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Product product;
+
+    // 옵션 상품 이름
+    @Column(length = 100, nullable = false)
+    private String optionName;
+
+    // 옵션 상품 가격
+    private Long price;
+
+    // 옵션 상품 수량
+    private int quantity;
+}
+```
+
+### OptionRepository
+```java
+public interface OptionRepository extends JpaRepository<Option, Long> {
+    List<Option> findByProductId(Long id);
+}
+```
+
+
+
+### Product CRUD
+
+#### Product Controller
+```java
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/product")
+public class ProductController {
+    private final ProductService productService;
+
+
+    @GetMapping("/create")
+    public ModelAndView create(){return new ModelAndView("create");}
+    // ** 전체 상품 확인
+    @GetMapping("/")
+    public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page ){
+        List<ProductResponse.FindAllDTO> productDTOS = productService.findAll(page);
+        ApiUtils.ApiResult<?> apiResult = ApiUtils.success(productDTOS);
+        return ResponseEntity.ok(apiResult);
+    }
+
+    // ** 개인 상품 확인
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id){
+        ProductResponse.FindByIdDTO productDTOS = productService.findByid(id);
+        ApiUtils.ApiResult<?> apiResult = ApiUtils.success(productDTOS);
+        return ResponseEntity.ok(apiResult);
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<?> createProduct(@RequestBody ProductResponse.CreateDTO createDTO){
+        ProductResponse.FindByIdDTO createdProduct = productService.createProduct(createDTO);
+        ApiUtils.ApiResult<?> apiResult = ApiUtils.success(createdProduct);
+        return ResponseEntity.ok(apiResult);
+    }
+
+    @GetMapping("/delete/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id){
+        productService.deleteProduct(id);
+        return ResponseEntity.ok(id);
+    }
+
+```
+
+```java
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class ProductService {
+    private final ProductRepository productRepository;
+    private final OptionRepository optionRepository;
+
+    // ** 전체 상품 확인
+    public List<ProductResponse.FindAllDTO> findAll(int page) {
+        Pageable pageable = PageRequest.of(page, 3);
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        List<ProductResponse.FindAllDTO> productDTOS =
+                productPage.getContent().stream().map(ProductResponse.FindAllDTO::new)
+                .collect(Collectors.toList());
+
+        return  productDTOS;
+    }
+
+    // ** 개인 상품 확인
+    public ProductResponse.FindByIdDTO findByid(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new Exception404("해당 상품을 찾을 수 없습니다. : "+id));
+        // ** product.getId() 로 Option 상품 검색.
+        List<Option> optionList = optionRepository.findByProductId(product.getId());
+
+        // ** 검색이 완료된 제품 반환.
+        return new ProductResponse.FindByIdDTO(product, optionList);
+    }
+
+    @Transactional
+    public ProductResponse.FindByIdDTO createProduct(ProductResponse.CreateDTO createDTO){
+        Product product = new Product();
+        product.setProductName(createDTO.getProductName());
+        product.setDescription(createDTO.getDescription());
+        product.setImage(createDTO.getImage());
+        product.setPrice(createDTO.getPrice());
+
+        productRepository.save(product);
+
+        return new ProductResponse.FindByIdDTO(product,new ArrayList<>());
+    }
+
+    @Transactional
+    public Long deleteProduct(Long id){
+        productRepository.deleteById(id);
+        return id;
+    }
+```
+- __추가된것은 deleteProduct,createProduct가현재 Controller,Service에 구현이 되어있다.__
+- __이후 추가할것은 Update를 추가할것이며 코드리뷰는 따로 작성할것입니다.__

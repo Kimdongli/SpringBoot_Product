@@ -1,0 +1,152 @@
+### Product(2)
+
+#### Option 기능 추가
+
+
+- __stream().map(람다식)__이 사용이될때 무조건 람다식이 사용이된다.
+
+### OptionController
+```java
+@RequiredArgsConstructor
+@RestController
+public class OptionController {
+    private final OptionService optionService;
+
+    /**
+     * @param id
+     * id 에 관련된 설명 (ProductId)
+     * @return
+     * 반환값에 관련된 설명
+     * List &lt;OptionResponse.FindByProductIdDTD&gt; 반환값에 관련된 설명
+     * */
+    // 개인 출력
+    @GetMapping("/products/{id}/options")
+    public ResponseEntity<?> findById(@PathVariable Long id){
+        List<OptionResponse.FindByProductIdDTD> optionResponses = optionService.findByProductId(id);
+        ApiUtils.ApiResult<?> apiResult = ApiUtils.success(optionResponses);
+        return ResponseEntity.ok(apiResult);
+    }
+
+    // 전체 출력
+    @GetMapping("/options")
+    public ResponseEntity<?> findAll(){
+
+        List<OptionResponse.FindAllDTO> optionResponses =
+                optionService.findAll();
+
+        ApiUtils.ApiResult<?> apiResult = ApiUtils.success(optionResponses);
+        return ResponseEntity.ok(apiResult);
+    }
+}
+```
+
+- __OptionController에 어제 Product와만찬가지로 findAll,findById 를 만들어서 하나,전체 출력을 만들어냈습니다.__
+
+### OptionResponse
+```java
+public class OptionResponse {
+
+
+    private Long id;
+
+    private Long productId;
+    private Product product;
+
+    // 옵션 상품 이름
+    private String optionName;
+
+    // 옵션 상품 가격
+    private Long price;
+
+    // 옵션 상품 수량
+    private Long quantity;
+
+    @Setter
+    @Getter
+    @NoArgsConstructor
+    public static class FindByProductIdDTD{
+        private Long id;
+
+        private Long productId;
+
+        // 옵션 상품 이름
+        private String optionName;
+
+        // 옵션 상품 가격
+        private Long price;
+
+        // 옵션 상품 수량
+        private Long quantity;
+
+        public FindByProductIdDTD(Option option){
+            this.id = option.getId();
+            this.productId = option.getProduct().getId();
+            this.optionName = option.getOptionName();
+            this.price = option.getPrice();
+            this.quantity= option.getQuantity();
+        }
+    }
+
+    @Setter
+    @Getter
+    @NoArgsConstructor
+    public static class FindAllDTO{
+        private Long id;
+
+        private Long productId;
+
+        // 옵션 상품 이름
+        private String optionName;
+
+        // 옵션 상품 가격
+        private Long price;
+
+        // 옵션 상품 수량
+        private Long quantity;
+
+        public FindAllDTO(Option option){
+            this.id = option.getId();
+            this.productId = option.getProduct().getId();
+            this.optionName = option.getOptionName();
+            this.price = option.getPrice();
+            this.quantity= option.getQuantity();
+        }
+    }
+```
+
+- __OptionResponse 도 마찬가지로 어제 ProductResponse 만든것처럼 DTO클래스를 만들어서 사용한다.__
+
+### OptionService
+```java
+@RequiredArgsConstructor
+@Service
+public class OptionService {
+    private final OptionRepository optionRepository;
+
+
+    public List<OptionResponse.FindByProductIdDTD> findByProductId(Long id){
+        List<Option> optionList = optionRepository.findByProductId(id);
+        List<OptionResponse.FindByProductIdDTD> optionResponses =
+                optionList.stream().map(OptionResponse.FindByProductIdDTD::new)
+                        .collect(Collectors.toList());
+        return optionResponses;
+    }
+
+    public List<OptionResponse.FindAllDTO> findAll() {
+        List<Option> optionList = optionRepository.findAll();
+
+        List<OptionResponse.FindAllDTO> findAllDTOS =
+                optionList.stream().map(OptionResponse.FindAllDTO::new)
+                        .collect(Collectors.toList());
+
+        return findAllDTOS;
+    }
+}
+```
+
+- __OptionService 도 마찬가지로 어제 ProductService 만든것처럼 ById,All을 매서드 만들어서 사용한다.__
+
+
+### Cart
+
+-
