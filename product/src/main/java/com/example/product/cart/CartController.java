@@ -6,16 +6,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/carts")
 public class CartController {
 
     private final CartService cartService;
@@ -23,7 +21,7 @@ public class CartController {
 
     // ** 카트 전체 상품 확인.
     // ** 인증 받지 않으면 즉시 401 에러가 뜬다.(CustomUserDetails)
-    @GetMapping("/carts")
+    @GetMapping("/")
     // ** 인증된 사용자 세부 정보 가져온다.
     public ResponseEntity<?> carts(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         // 모든 정보를 받아온다.
@@ -35,7 +33,7 @@ public class CartController {
     }
 
     // ** 카트에 상품 추가.
-    @PostMapping("/carts/add")
+    @PostMapping("/add")
     public ResponseEntity<?> addCartList(
             // ** HTTP 요청 본문을 List<CartRequest.SaveDTO> 타입의 객체로 변환
             // ** @Valid 객체에 대해 유효성 검사 수행
@@ -53,7 +51,7 @@ public class CartController {
 
 
     // ** 카트 업데이트
-    @GetMapping("/carts/update")
+    @GetMapping("/update")
     public ResponseEntity<?> update(
           // ** HTTP 요청 본문을 List<CartRequest.UpdateDTO> 타입의 객체로 변환
           // ** @Valid 객체에 대해 유효성 검사 수행

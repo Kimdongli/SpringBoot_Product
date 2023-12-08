@@ -11,11 +11,12 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/options")
 public class OptionController {
     private final OptionService optionService;
 
 
-    @GetMapping("/options/create")
+    @GetMapping("/create")
     public ModelAndView createOption(){return new ModelAndView("createOption");}
     /**
      * @param id
@@ -35,7 +36,7 @@ public class OptionController {
     }
 
     // 모든 옵션을 조회하는 메소드
-    @GetMapping("/options")
+    @GetMapping("/")
     public ResponseEntity<?> findAll(){
         // 서비스로부터 모든 옵션을 조회
         List<OptionResponse.FindAllDTO> optionResponses =
@@ -46,7 +47,7 @@ public class OptionController {
     }
 
     // 옵션 생성 메소드
-    @PostMapping("/options/save")
+    @PostMapping("/save")
     public ResponseEntity<?> OptionSave(@RequestBody OptionResponse.CreateDTO createDTO){
         // 서비스로부터 옵션을 저장하고 결과를 받음
         List<OptionResponse.CreateDTO> optionResponses = optionService.createOption(createDTO);

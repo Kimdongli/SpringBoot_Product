@@ -84,7 +84,7 @@ public class OptionResponse {
     @Setter
     @Getter
     public static class CreateDTO{
-        private Long id;
+
 
         // 옵션 상품 이름
         private String optionName;
@@ -96,9 +96,12 @@ public class OptionResponse {
         private Long quantity;
 
         private Long product;
+
+        public CreateDTO(){
+
+        }
         // 이 생성자는 Option 객체를 CreateDTO 객체로 변환합니다.
         public CreateDTO(Option option){
-            this.id = option.getId();
             this.product = option.getProduct().getId();
             this.optionName = option.getOptionName();
             this.price = option.getPrice();

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Page</title>
+</head>
+<body>
+<h1>Welcome to the Product Management System</h1>
+
+<button onclick="location.href='/products/create'">Create New Product</button>
+<button onclick="location.href='/options/create'">Create New Option</button>
+
+<h2>Join</h2>
+<form id="joinForm" action="http://localhost:8080/user/join" method="post">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
+
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required><br><br>
+
+    <input type="submit" value="Submit">
+</form>
+
+<h2>Login</h2>
+<form id="loginForm" action="http://localhost:8080/user/login" method="post">
+    <label for="loginEmail">Email:</label>
+    <input type="email" id="loginEmail" name="email" required><br><br>
+
+    <label for="loginPassword">Password:</label>
+    <input type="password" id="loginPassword" name="password" required><br><br>
+
+    <input type="submit" value="Login">
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const joinForm = document.getElementById('joinForm');
+        joinForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const username = document.getElementById('username').value;
+
+            const data = {
+                email,
+                password,
+                username
+            };
+
+            try {
+                const response = await fetch('http://localhost:8080/user/join', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert("회원가입에 성공했습니다!");
+                } else {
+                    alert("Error: " + result.error.message);
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const data = {
+                email,
+                password
+            };
+
+            try {
+                const response = await fetch('http://localhost:8080/user/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert("로그인에 성공했습니다!");
+                } else {
+                    alert("Error: " + result.error.message);
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

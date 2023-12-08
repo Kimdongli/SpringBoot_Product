@@ -53,6 +53,10 @@ public class UserController {
         return ResponseEntity.ok(ApiUtils.success(null));
     }
 
+    @GetMapping("/join")
+    public ModelAndView joinPage() {
+        return new ModelAndView("join");
+    }
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid UserRequest.JoinDTO requestDTO, Error error){
         String jwt = "";

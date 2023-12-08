@@ -28,7 +28,7 @@ public class Product {
     @Column(length = 500, nullable = false)
     private String description;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.PERSIST)
     private List<Option> options = new ArrayList<>();
 
     // ** 이미지 정보

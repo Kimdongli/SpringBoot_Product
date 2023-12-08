@@ -41,5 +41,6 @@ public class Option {
         this.price = price;
         this.quantity = quantity;
         this.product = product;
+        this.product.getOptions().add(this);
     }
 }

@@ -23,7 +23,13 @@
                     product: productId
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/index.html'; // ** 성공 시 index.html로 이동
+                } else {
+                    return response.json();
+                }
+            })
             .then(data => console.log(data))
             .catch((error) => {
               console.error('Error:', error);
@@ -34,7 +40,6 @@
 <body>
 <h1>Create Option</h1>
 <form onsubmit="createOption(event)">
-
     <label for="productId">Product ID:</label><br>
     <input type="number" id="productId" name="productId"><br>
 
