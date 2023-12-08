@@ -9,6 +9,7 @@
 
 <button onclick="location.href='/products/create'">Create New Product</button>
 <button onclick="location.href='/options/create'">Create New Option</button>
+<button onclick="location.href='/carts/create'">Create New Cart</button>
 
 <h2>Join</h2>
 <form id="joinForm" action="http://localhost:8080/user/join" method="post">
@@ -73,40 +74,57 @@
             }
         });
 
-        const loginForm = document.getElementById('loginForm');
-        loginForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
+const loginForm = document.getElementById('loginForm');
+loginForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
 
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
 
-            const data = {
-                email,
-                password
-            };
+    const data = {
+        email,
+        password
+    };
 
-            try {
-                const response = await fetch('http://localhost:8080/user/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    alert("로그인에 성공했습니다!");
-                } else {
-                    alert("Error: " + result.error.message);
-                }
-
-            } catch (error) {
-                console.error('Error:', error);
-            }
+    try {
+        const response = await fetch('http://localhost:8080/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         });
-    });
+
+        const token = response.headers.get('Authorization');
+        if (token) {
+            // 토큰을 로컬 스토리지에 저장
+            window.localStorage.setItem('jwtToken', token);
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+            alert("로그인에 성공했습니다!");
+        } else {
+            alert("Error: " + result.error.message);
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+
+    const token = window.localStorage.getItem('jwtToken');
+fetch('http://localhost:8080/carts/create', {
+    method: 'GET',
+    headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+    }
+})
+.then(response => response.json())
+.then(data => console.log('Success:', data))
+.catch(error => console.error('Error:', error));
 </script>
 
 </body>

@@ -1,0 +1,48 @@
+## Option 기능
+
+- __현재 Product Id를 들고와서 Product안에 Option을 설정하는 과정에서 계속 오류발생__
+```
+Type definition error: [simple type, class com.example.product.option.OptionResponse$CreateDTO];
+ nested exception is com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Cannot construct instance of com.example.product.option.OptionResponse$CreateDTO (no Creators, like default constructor, exist):
+cannot deserialize from Object value (no delegate- or property-based Creator)\n
+at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 2, column: 3]"
+```
+ __오류 코드__
+### OptionResponse
+```java
+  @Setter
+   @Getter
+   public static class CreateDTO{
+       // 옵션 상품 이름
+       private String optionName;
+
+       // 옵션 상품 가격
+       private Long price;
+
+       // 옵션 상품 수량
+       private Long quantity;
+
+       private Long product;
+
+       public CreateDTO(){
+
+       }
+       // 이 생성자는 Option 객체를 CreateDTO 객체로 변환합니다.
+       public CreateDTO(Option option){
+           this.product = option.getProduct().getId();
+           this.optionName = option.getOptionName();
+           this.price = option.getPrice();
+           this.quantity= option.getQuantity();
+       }
+       // 'toEntity' 메소드는 'CreateDTO' 객체를 'Option' 엔티티로 변환합니다.
+       // 이 메소드는 옵션을 생성할 때 사용됩니다.
+       public Option toEntity(ProductRepository productRepository) {
+           Product product = productRepository.findById(this.product)
+                   .orElseThrow(() -> new IllegalArgumentException("Invalid product Id:" + this.product));
+           return new Option(this.optionName, this.price, this.quantity, product);
+       }
+   }
+```
+- __제가 생각했을떄 CreateDTO쪽에서 문제가 있음을 느끼고 기본 생성자 생성 후 오류 해결__
+
+## Cart

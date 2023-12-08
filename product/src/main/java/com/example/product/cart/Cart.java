@@ -1,6 +1,7 @@
 package com.example.product.cart;
 
 import com.example.product.option.Option;
+import com.example.product.user.StringArrayConverter;
 import com.example.product.user.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,6 +29,7 @@ public class Cart {
 
     // ** user별로 카트에 묶임
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
 

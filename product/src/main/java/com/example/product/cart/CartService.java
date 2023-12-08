@@ -6,6 +6,7 @@ import com.example.product.core.error.exception.Exception500;
 import com.example.product.option.Option;
 import com.example.product.option.OptionRepository;
 import com.example.product.user.User;
+import com.example.product.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ public class CartService {
 
     private final CartRepository cartRepository;
     private final OptionRepository optionRepository;
+    private final UserRepository userRepository;
 
     public CartResponse.FindAllDTO findAll() {
         // Cart 모든 항목 조회
@@ -40,10 +42,17 @@ public class CartService {
 
         // 요청받은 각 상품에 대해
         for(CartRequest.SaveDTO cart: saveDTOS){
+            if(cart.getOptionId() == null) {
+                throw new Exception400("optionId가 null입니다.");
+            }
             // 동일한 상품이 있을경우 예외 발생
-            if(!optionsId.add(cart.getOptionId()));
-            throw new Exception400("이미 동일한 상품 옵션이 있습니다." + cart.getOptionId());
+            if(!optionsId.add(cart.getOptionId()))
+
+                throw new Exception400("이미 동일한 상품 옵션이 있습니다." + cart.getOptionId());
         }
+
+        userRepository.save(user);
+
 
         // ** 상품 존재 유무
         List<Cart> cartList = saveDTOS.stream().map(cartDTO->{

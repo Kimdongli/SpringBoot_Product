@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cart</title>
+</head>
+<body>
+<h1>Cart</h1>
+<button id="loadButton">Load Cart</button>
+<div id="cart"></div>
+
+<script>
+    document.getElementById('loadButton').addEventListener('click', async function() {
+        try {
+            const token = window.localStorage.getItem('jwtToken');
+            const response = await fetch('http://localhost:8080/carts/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': token,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('cart').innerText = JSON.stringify(data, null, 2);
+            } else {
+                console.error('Error:', response.status);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+</script>
+</body>
+</html>

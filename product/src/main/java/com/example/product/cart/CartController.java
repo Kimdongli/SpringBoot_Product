@@ -7,6 +7,7 @@ import lombok.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -19,6 +20,8 @@ public class CartController {
     private final CartService cartService;
 
 
+    @GetMapping("/create")
+    public ModelAndView create(){return new ModelAndView("cart");}
     // ** 카트 전체 상품 확인.
     // ** 인증 받지 않으면 즉시 401 에러가 뜬다.(CustomUserDetails)
     @GetMapping("/")

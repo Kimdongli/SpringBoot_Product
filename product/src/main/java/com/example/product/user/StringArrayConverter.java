@@ -13,6 +13,9 @@ public class StringArrayConverter implements AttributeConverter<List<String>, St
 
     @Override
     public String convertToDatabaseColumn(List<String> attribute) {
+        if (attribute == null || attribute.isEmpty()) {
+            return null;
+        }
         // ** 전달받은 리스트에 있는 구성요소들을 "," 로 구분하여 하나의 문자열로 변환 함.
         return attribute.stream().map(String::valueOf).collect(Collectors.joining(SPLIT_CHAR));
     }
@@ -28,13 +31,5 @@ public class StringArrayConverter implements AttributeConverter<List<String>, St
                     .map(String::valueOf)
                     .collect(Collectors.toList());
     }
+
 }
-
-
-
-
-
-
-
-
-

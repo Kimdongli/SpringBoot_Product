@@ -1,5 +1,6 @@
 package com.example.product.user;
 
+import com.example.product.cart.Cart;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,12 +27,16 @@ public class User {
     @Convert(converter = StringArrayConverter.class)
     private List<String> roles = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Cart> carts = new ArrayList<>();
+
     @Builder
-    public User(Long id, String email, String password, List<String> roles) {
+    public User(Long id, String email, String password, List<String> roles, List<Cart> carts) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.roles = roles;
+        this.carts = carts;
     }
 }
 
