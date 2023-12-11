@@ -26,6 +26,10 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
 
+    @GetMapping("/join")
+    public ModelAndView joinPage() {
+        return new ModelAndView("join");
+    }
 
     @PostMapping("/join")
     public ResponseEntity join(@RequestBody @Valid UserRequest.JoinDTO requestDTO, Errors errors){
@@ -56,10 +60,7 @@ public class UserController {
         return ResponseEntity.ok(ApiUtils.success(null));
     }
 
-    @GetMapping("/join")
-    public ModelAndView joinPage() {
-        return new ModelAndView("join");
-    }
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid UserRequest.JoinDTO requestDTO, Error error){
         String jwt = "";

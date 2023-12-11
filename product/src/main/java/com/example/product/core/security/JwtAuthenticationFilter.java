@@ -18,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 
 @Slf4j
@@ -55,10 +56,10 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
             // ** 권한 정보를 문자열 리스트로 변환.
             StringArrayConverter stringArrayConverter = new StringArrayConverter();
-
+            List<String> rolesList = stringArrayConverter.convertToEntityAttribute(roles);
 
             // ** 추출한 정보로 유저를 생성.
-            User user = User.builder().id(id).build();
+            User user = User.builder().id(id).roles(rolesList).build();
             CustomUserDetails customUserDetails = new CustomUserDetails(user);
 
             // ** Spring Security 가 인증 정보를 관리하는데 사용.

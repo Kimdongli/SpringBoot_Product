@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Getter
@@ -17,10 +18,13 @@ public class CustomUserDetails implements UserDetails {
     // ** anonymousUser = 비인증
     private final User user;
 
+    // ** 사용자에게 부여된 권한을 GrantedAuthority 객체의 컬렉션으로 반환.
     @Override
     // ** 사용자에게 부여된 권한을 GrantedAuthority 객체의 컬렉션으로 반환.
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+        return this.user.getRoles().stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     @Override

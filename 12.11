@@ -1,6 +1,6 @@
 ## Order
 
-나이스 페이먼츠
+### 나이스 페이먼츠
 
 ```java
 import java.util.Base64;
@@ -128,57 +128,58 @@ public class NicepayController {
 - __더미파일 https://www.mockaroo.com/__
 - __더미파일 만들고 메모장으로 들어가서 수정후 더미파일 resources 파일안에 db파일을 만든후 db파일안에 더미파일 넣는다.__
 
+### productdata
 ```sql
-insert into product (product_name, description, price, quantity) values ('Flower - Daisies', 'description', 127128, 990);
-insert into product (product_name, description, price, quantity) values ('Wine - Cotes Du Rhone', 'description', 222860, 98);
-insert into product (product_name, description, price, quantity) values ('Cherries - Fresh', 'description', 35824, 186);
-insert into product (product_name, description, price, quantity) values ('Beer - True North Lager', 'description', 205953, 4);
-insert into product (product_name, description, price, quantity) values ('Mix Pina Colada', 'description', 71699, 96);
-insert into product (product_name, description, price, quantity) values ('Figs', 'description', 177804, 599);
-insert into product (product_name, description, price, quantity) values ('Muffin Mix - Chocolate Chip', 'description', 45621, 51);
-insert into product (product_name, description, price, quantity) values ('Appetiser - Bought', 'description', 279269, 686);
-insert into product (product_name, description, price, quantity) values ('Catfish - Fillets', 'description', 215287, 195);
-insert into product (product_name, description, price, quantity) values ('Muffin Mix - Blueberry', 'description', 154952, 135);
-insert into product (product_name, description, price, quantity) values ('Glucose', 'description', 91172, 844);
-insert into product (product_name, description, price, quantity) values ('Pork - Smoked Kassler', 'description', 72624, 278);
-insert into product (product_name, description, price, quantity) values ('Pastry - Apple Muffins - Mini', 'description', 278207, 784);
-insert into product (product_name, description, price, quantity) values ('Cheese - Cream Cheese', 'description', 261689, 802);
-insert into product (product_name, description, price, quantity) values ('Sugar - White Packet', 'description', 221130, 836);
-insert into product (product_name, description, price, quantity) values ('Chicken - Leg, Fresh', 'description', 189517, 697);
-insert into product (product_name, description, price, quantity) values ('Wine - Chablis 2003 Champs', 'description', 7328, 516);
-insert into product (product_name, description, price, quantity) values ('Worcestershire Sauce', 'description', 278778, 93);
-insert into product (product_name, description, price, quantity) values ('Wine - Alsace Riesling Reserve', 'description', 107108, 601);
-insert into product (product_name, description, price, quantity) values ('Flour - All Purpose', 'description', 230289, 915);
-insert into product (product_name, description, price, quantity) values ('Beans - Black Bean, Canned', 'description', 138101, 868);
-insert into product (product_name, description, price, quantity) values ('Meldea Green Tea Liquor', 'description', 90536, 12);
-insert into product (product_name, description, price, quantity) values ('Juice - V8 Splash', 'description', 52510, 366);
-insert into product (product_name, description, price, quantity) values ('Lid - High Heat, Super Clear', 'description', 105799, 279);
-insert into product (product_name, description, price, quantity) values ('Wine - Sicilia Igt Nero Avola', 'description', 88556, 253);
-insert into product (product_name, description, price, quantity) values ('Fenngreek Seed', 'description', 291113, 626);
-insert into product (product_name, description, price, quantity) values ('Pear - Asian', 'description', 193221, 655);
-insert into product (product_name, description, price, quantity) values ('Cheese - Gorgonzola', 'description', 224841, 512);
-insert into product (product_name, description, price, quantity) values ('Wine - Cava Aria Estate Brut', 'description', 17471, 886);
-insert into product (product_name, description, price, quantity) values ('Kahlua', 'description', 195188, 201);
-insert into product (product_name, description, price, quantity) values ('Muffin Batt - Blueberry Passion', 'description', 258583, 471);
-insert into product (product_name, description, price, quantity) values ('Roe - Lump Fish, Black', 'description', 282992, 623);
-insert into product (product_name, description, price, quantity) values ('Table Cloth 62x114 White', 'description', 294094, 169);
-insert into product (product_name, description, price, quantity) values ('Wine - Zinfandel California 2002', 'description', 198881, 951);
-insert into product (product_name, description, price, quantity) values ('Cookies - Englishbay Wht', 'description', 162676, 167);
-insert into product (product_name, description, price, quantity) values ('Rice - Basmati', 'description', 16981, 179);
-insert into product (product_name, description, price, quantity) values ('Tea - Camomele', 'description', 153183, 343);
-insert into product (product_name, description, price, quantity) values ('Bread - Pumpernickel', 'description', 6702, 23);
-insert into product (product_name, description, price, quantity) values ('Peas - Pigeon, Dry', 'description', 148057, 780);
-insert into product (product_name, description, price, quantity) values ('Sunflower Seed Raw', 'description', 58762, 967);
-insert into product (product_name, description, price, quantity) values ('Lamb Rack - Ontario', 'description', 62846, 387);
-insert into product (product_name, description, price, quantity) values ('Beer - Camerons Auburn', 'description', 162281, 44);
-insert into product (product_name, description, price, quantity) values ('Arctic Char - Fresh, Whole', 'description', 268034, 570);
-insert into product (product_name, description, price, quantity) values ('Tea - English Breakfast', 'description', 63191, 331);
-insert into product (product_name, description, price, quantity) values ('Beer - Upper Canada Light', 'description', 142988, 539);
-insert into product (product_name, description, price, quantity) values ('Squid - U - 10 Thailand', 'description', 286914, 992);
-insert into product (product_name, description, price, quantity) values ('Apple - Fuji', 'description', 18154, 915);
-insert into product (product_name, description, price, quantity) values ('Bread - Rosemary Focaccia', 'description', 283202, 725);
-insert into product (product_name, description, price, quantity) values ('Tea - Camomele', 'description', 215494, 995);
-insert into product (product_name, description, price, quantity) values ('Flour - Semolina', 'description', 6318, 688);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Chocolate - Milk', description, 85578);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Crackers - Water', description, 161563);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Sesame Seed', description, 49863);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Cloves - Whole', description, 217433);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Apple - Delicious, Red', description, 91514);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Chinese Foods - Thick Noodles', description, 141863);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Crackers - Melba Toast', description, 47972);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Flour - Cake', description, 154071);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Beef - Top Butt', description, 58124);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Sugar - Icing', description, 269384);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Cup - 4oz Translucent', description, 52972);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Cheese - Comte', description, 17131);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Longos - Chicken Cordon Bleu', description, 191581);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Sage - Rubbed', description, 13396);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Ham - Proscuitto', description, 47767);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Flour - Buckwheat, Dark', description, 199470);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Vinegar - Tarragon', description, 203011);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Wine - Zinfandel Rosenblum', description, 124762);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Sprite, Diet - 355ml', description, 141221);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Browning Caramel Glace', description, 250405);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Bread - Frozen Basket Variety', description, 288577);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Cut Wakame - Hanawakaba', description, 175963);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Pasta - Canelloni, Single Serve', description, 101891);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Veal - Brisket, Provimi,bnls', description, 68074);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Salt - Kosher', description, 206631);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Bread Ww Cluster', description, 141155);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Crab - Dungeness, Whole', description, 36392);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Pepper - Red Chili', description, 110239);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Grenadillo', description, 5787);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Remy Red', description, 6132);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Wine - Coteaux Du Tricastin Ac', description, 83524);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Potato - Sweet', description, 4128);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Mushrooms - Black, Dried', description, 102414);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Cod - Salted, Boneless', description, 85181);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Rice - 7 Grain Blend', description, 282195);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Sandwich Wrap', description, 76653);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Lobster - Base', description, 134772);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Cinnamon - Stick', description, 87477);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Wine - Sawmill Creek Autumn', description, 208245);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Soup - Campbells Bean Medley', description, 116452);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Mortadella', description, 83700);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Chilli Paste, Sambal Oelek', description, 99124);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Creme De Banane - Marie', description, 227884);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Flour - Bread', description, 75389);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Chicken - Tenderloin', description, 136396);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Wine - Jaboulet Cotes Du Rhone', description, 254011);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Cookies - Englishbay Oatmeal', description, 246552);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Chips - Potato Jalapeno', description, 70880);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Spic And Span All Purpose', description, 18736);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Melon - Watermelon, Seedless', description, 279679);
 ```
 ```sql
 SET REFERENTIAL_INTEGRITY FALSE;
@@ -192,6 +193,35 @@ truncate table option_tb;
 truncate table order_tb;
 truncate table cart_tb;
 ```
-
+- __위에있는 sql은 필요없다(다시확인해보니 quantity가아니라 image로 바꿔서 하니 DB에 저장이 잘되었다.)__
 - __모든 db삭제후 테이블 추가__
 - __SQL은 Name을 _name으로 수정을해야한다.__
+
+### userdata
+```sql
+insert into user (email, password, roles) values ('admin@green.com', 'Test1234!', 'ROLE_USER');
+insert into user (email, password, roles) values ('dpafford1@linkedin.com', 'vF8.<>JV', 'ROLE_USER');
+insert into user (email, password, roles) values ('cwarwick2@slideshare.net', 'vU7=W`uzQ7}?A', 'ROLE_USER');
+insert into user (email, password, roles) values ('dcunniffe3@theglobeandmail.com', 'mF0=B\Oq7LQ', 'ROLE_USER');
+insert into user (email, password, roles) values ('mfreeburn4@jugem.jp', 'mP7\ZBqIm|EWe,&.', 'ROLE_USER');
+insert into user (email, password, roles) values ('ldyneley5@webmd.com', 'kB5|<3w*r{9\_', 'ROLE_USER');
+insert into user (email, password, roles) values ('jcadalleder6@cdbaby.com', 'tL6\3o.Or&+B\7', 'ROLE_USER');
+insert into user (email, password, roles) values ('sbegin7@mlb.com', 'dR9"7rs3_}', 'ROLE_USER');
+insert into user (email, password, roles) values ('pbiasioli8@dailymail.co.uk', 'zU8?''X"Q''/1', 'ROLE_USER');
+insert into user (email, password, roles) values ('dfalconer9@360.cn', 'cM6<nrn<', 'ROLE_USER');
+```
+- __userdata추가__
+- __userdata중 password는 인코딩이(암호) 되어있으므로 추후에 바꿔야한다.__
+
+
+### 결제
+- __1. https://start.nicepay.co.kr/__
+- __html로 바꿔서사용(cancel,response)__
+
+### 회고
+- __1. Board 포폴부터 완성한다.__
+- __2. product 토큰인증__
+- __3. 결제정보 추가__
+---
+- __DTO 유저 아이디로 들고와서 사용__
+- __ERD작업,연관관계 맵핑, 데이터의 무결성(DTO 작업)__
