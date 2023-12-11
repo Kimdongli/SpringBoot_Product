@@ -1,0 +1,197 @@
+## Order
+
+나이스 페이먼츠
+
+```java
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.springframework.http.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.client.RestTemplate;
+
+@Controller
+public class NicepayController {
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private final String CLIENT_ID = "S2_af4543a0be4d49a98122e01ec2059a56";
+    private final String SECRET_KEY = "9eb85607103646da9f9c02b128f2e5ee";
+
+    @RequestMapping("/")
+    public String indexDemo(Model model){
+        UUID id = UUID.randomUUID();
+        model.addAttribute("orderId", id);
+        model.addAttribute("clientId", CLIENT_ID);
+        return "/index";
+    }
+
+    @RequestMapping(value="/cancel")
+    public String cancelDemo(){
+        return "/cancel";
+    }
+
+    @RequestMapping("/serverAuth")
+    public String requestPayment(
+            @RequestParam String tid,
+            @RequestParam Long amount,
+            Model model) throws Exception {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Basic " + Base64.getEncoder().encodeToString((CLIENT_ID + ":" + SECRET_KEY).getBytes()));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> AuthenticationMap = new HashMap<>();
+        AuthenticationMap.put("amount", String.valueOf(amount));
+
+        HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(AuthenticationMap), headers);
+
+        ResponseEntity<JsonNode> responseEntity = restTemplate.postForEntity(
+            "https://sandbox-api.nicepay.co.kr/v1/payments/" + tid, request, JsonNode.class);
+
+        JsonNode responseNode = responseEntity.getBody();
+        String resultCode = responseNode.get("resultCode").asText();
+        model.addAttribute("resultMsg", responseNode.get("resultMsg").asText());
+
+        System.out.println(responseNode.toPrettyString());
+
+        if (resultCode.equalsIgnoreCase("0000")) {
+            // 결제 성공 비즈니스 로직 구현
+        } else {
+            // 결제 실패 비즈니스 로직 구현
+        }
+
+        return "/response";
+    }
+
+    @RequestMapping("/cancelAuth")
+    public String requestCancel(
+            @RequestParam String tid,
+            @RequestParam String amount,
+            Model model) throws Exception {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Basic " + Base64.getEncoder().encodeToString((CLIENT_ID + ":" + SECRET_KEY).getBytes()));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> AuthenticationMap = new HashMap<>();
+        AuthenticationMap.put("amount", amount);
+        AuthenticationMap.put("reason", "test");
+        AuthenticationMap.put("orderId", UUID.randomUUID().toString());
+
+        HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(AuthenticationMap), headers);
+
+        ResponseEntity<JsonNode> responseEntity = restTemplate.postForEntity(
+            "https://sandbox-api.nicepay.co.kr/v1/payments/"+ tid +"/cancel", request, JsonNode.class);
+
+        JsonNode responseNode = responseEntity.getBody();
+        String resultCode = responseNode.get("resultCode").asText();
+        model.addAttribute("resultMsg", responseNode.get("resultMsg").asText());
+
+        System.out.println(responseNode.toPrettyString());
+
+        if (resultCode.equalsIgnoreCase("0000")) {
+            // 취소 성공 비즈니스 로직 구현
+        } else {
+            // 취소 실패 비즈니스 로직 구현
+        }
+
+        return "/response";
+    }
+
+    @RequestMapping("/hook")
+    public ResponseEntity<String> hook(@RequestBody HashMap<String, Object> hookMap) throws Exception {
+        String resultCode = hookMap.get("resultCode").toString();
+
+        System.out.println(hookMap);
+
+        if(resultCode.equalsIgnoreCase("0000")){
+            return ResponseEntity.status(HttpStatus.OK).body("ok");
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
+```
+
+- __들고온후 CLIENT_ID,SECRET_KEY 는본인걸로 바꿔주고 response,cancel html을 템플릿에 따로 만들어준다.__
+- __더미파일 https://www.mockaroo.com/__
+- __더미파일 만들고 메모장으로 들어가서 수정후 더미파일 resources 파일안에 db파일을 만든후 db파일안에 더미파일 넣는다.__
+
+```sql
+insert into product (product_name, description, price, quantity) values ('Flower - Daisies', 'description', 127128, 990);
+insert into product (product_name, description, price, quantity) values ('Wine - Cotes Du Rhone', 'description', 222860, 98);
+insert into product (product_name, description, price, quantity) values ('Cherries - Fresh', 'description', 35824, 186);
+insert into product (product_name, description, price, quantity) values ('Beer - True North Lager', 'description', 205953, 4);
+insert into product (product_name, description, price, quantity) values ('Mix Pina Colada', 'description', 71699, 96);
+insert into product (product_name, description, price, quantity) values ('Figs', 'description', 177804, 599);
+insert into product (product_name, description, price, quantity) values ('Muffin Mix - Chocolate Chip', 'description', 45621, 51);
+insert into product (product_name, description, price, quantity) values ('Appetiser - Bought', 'description', 279269, 686);
+insert into product (product_name, description, price, quantity) values ('Catfish - Fillets', 'description', 215287, 195);
+insert into product (product_name, description, price, quantity) values ('Muffin Mix - Blueberry', 'description', 154952, 135);
+insert into product (product_name, description, price, quantity) values ('Glucose', 'description', 91172, 844);
+insert into product (product_name, description, price, quantity) values ('Pork - Smoked Kassler', 'description', 72624, 278);
+insert into product (product_name, description, price, quantity) values ('Pastry - Apple Muffins - Mini', 'description', 278207, 784);
+insert into product (product_name, description, price, quantity) values ('Cheese - Cream Cheese', 'description', 261689, 802);
+insert into product (product_name, description, price, quantity) values ('Sugar - White Packet', 'description', 221130, 836);
+insert into product (product_name, description, price, quantity) values ('Chicken - Leg, Fresh', 'description', 189517, 697);
+insert into product (product_name, description, price, quantity) values ('Wine - Chablis 2003 Champs', 'description', 7328, 516);
+insert into product (product_name, description, price, quantity) values ('Worcestershire Sauce', 'description', 278778, 93);
+insert into product (product_name, description, price, quantity) values ('Wine - Alsace Riesling Reserve', 'description', 107108, 601);
+insert into product (product_name, description, price, quantity) values ('Flour - All Purpose', 'description', 230289, 915);
+insert into product (product_name, description, price, quantity) values ('Beans - Black Bean, Canned', 'description', 138101, 868);
+insert into product (product_name, description, price, quantity) values ('Meldea Green Tea Liquor', 'description', 90536, 12);
+insert into product (product_name, description, price, quantity) values ('Juice - V8 Splash', 'description', 52510, 366);
+insert into product (product_name, description, price, quantity) values ('Lid - High Heat, Super Clear', 'description', 105799, 279);
+insert into product (product_name, description, price, quantity) values ('Wine - Sicilia Igt Nero Avola', 'description', 88556, 253);
+insert into product (product_name, description, price, quantity) values ('Fenngreek Seed', 'description', 291113, 626);
+insert into product (product_name, description, price, quantity) values ('Pear - Asian', 'description', 193221, 655);
+insert into product (product_name, description, price, quantity) values ('Cheese - Gorgonzola', 'description', 224841, 512);
+insert into product (product_name, description, price, quantity) values ('Wine - Cava Aria Estate Brut', 'description', 17471, 886);
+insert into product (product_name, description, price, quantity) values ('Kahlua', 'description', 195188, 201);
+insert into product (product_name, description, price, quantity) values ('Muffin Batt - Blueberry Passion', 'description', 258583, 471);
+insert into product (product_name, description, price, quantity) values ('Roe - Lump Fish, Black', 'description', 282992, 623);
+insert into product (product_name, description, price, quantity) values ('Table Cloth 62x114 White', 'description', 294094, 169);
+insert into product (product_name, description, price, quantity) values ('Wine - Zinfandel California 2002', 'description', 198881, 951);
+insert into product (product_name, description, price, quantity) values ('Cookies - Englishbay Wht', 'description', 162676, 167);
+insert into product (product_name, description, price, quantity) values ('Rice - Basmati', 'description', 16981, 179);
+insert into product (product_name, description, price, quantity) values ('Tea - Camomele', 'description', 153183, 343);
+insert into product (product_name, description, price, quantity) values ('Bread - Pumpernickel', 'description', 6702, 23);
+insert into product (product_name, description, price, quantity) values ('Peas - Pigeon, Dry', 'description', 148057, 780);
+insert into product (product_name, description, price, quantity) values ('Sunflower Seed Raw', 'description', 58762, 967);
+insert into product (product_name, description, price, quantity) values ('Lamb Rack - Ontario', 'description', 62846, 387);
+insert into product (product_name, description, price, quantity) values ('Beer - Camerons Auburn', 'description', 162281, 44);
+insert into product (product_name, description, price, quantity) values ('Arctic Char - Fresh, Whole', 'description', 268034, 570);
+insert into product (product_name, description, price, quantity) values ('Tea - English Breakfast', 'description', 63191, 331);
+insert into product (product_name, description, price, quantity) values ('Beer - Upper Canada Light', 'description', 142988, 539);
+insert into product (product_name, description, price, quantity) values ('Squid - U - 10 Thailand', 'description', 286914, 992);
+insert into product (product_name, description, price, quantity) values ('Apple - Fuji', 'description', 18154, 915);
+insert into product (product_name, description, price, quantity) values ('Bread - Rosemary Focaccia', 'description', 283202, 725);
+insert into product (product_name, description, price, quantity) values ('Tea - Camomele', 'description', 215494, 995);
+insert into product (product_name, description, price, quantity) values ('Flour - Semolina', 'description', 6318, 688);
+```
+```sql
+SET REFERENTIAL_INTEGRITY FALSE;
+```
+- __SET REFERENTIAL_INTEGRITY FALSE; 첫번쨰 줄에 추가__
+
+```sql
+truncate table user;
+truncate table product;
+truncate table option_tb;
+truncate table order_tb;
+truncate table cart_tb;
+```
+
+- __모든 db삭제후 테이블 추가__
+- __SQL은 Name을 _name으로 수정을해야한다.__

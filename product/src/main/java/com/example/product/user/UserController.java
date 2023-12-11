@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -27,12 +28,15 @@ public class UserController {
 
 
     @PostMapping("/join")
-    public ResponseEntity join(@RequestBody @Valid UserRequest.JoinDTO requestDTO, Error error){
+    public ResponseEntity join(@RequestBody @Valid UserRequest.JoinDTO requestDTO, Errors errors){
 
         // ** Test
         //joinDTO.setEmail("asdfasdf@green.com");
         //joinDTO.setPassword("1235");
 
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(errors.getAllErrors());
+        }
 
         // Service만들어서 하는게 나중을위해서 더좋음
         Optional<User> byEmail = userRepository.findByEmail(requestDTO.getEmail());
@@ -44,7 +48,6 @@ public class UserController {
 
 
         // ** password 인코딩
-
         String encodedPassword = passwordEncoder.encode(requestDTO.getPassword());
         requestDTO.setPassword(encodedPassword);
 
@@ -65,6 +68,7 @@ public class UserController {
         try{
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
                     = new UsernamePasswordAuthenticationToken(requestDTO.getEmail(), requestDTO.getPassword());
+
 
             // ** anonymousUser = 비인증
             Authentication authentication =  authenticationManager.authenticate(

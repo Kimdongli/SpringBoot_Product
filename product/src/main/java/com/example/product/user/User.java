@@ -27,7 +27,7 @@ public class User {
     @Convert(converter = StringArrayConverter.class)
     private List<String> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
     private List<Cart> carts = new ArrayList<>();
 
     @Builder

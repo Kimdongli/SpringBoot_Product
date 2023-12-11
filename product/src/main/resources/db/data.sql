@@ -1,0 +1,65 @@
+
+
+insert into user (email, password, roles) values ('test@test.com', '{bcrypt}$2a$10$BH5FAIpqxu4y/4U4QK06GeSkIhDe29qxGe77Ce29Wr4xVOBAJ8rZi', 'ROLE_USER');
+insert into user (email, password, roles) values ('dpafford1@linkedin.com', 'vF8.<>JV', 'ROLE_USER');
+insert into user (email, password, roles) values ('cwarwick2@slideshare.net', 'vU7=W`uzQ7}?A', 'ROLE_USER');
+insert into user (email, password, roles) values ('dcunniffe3@theglobeandmail.com', 'mF0=B\Oq7LQ', 'ROLE_USER');
+insert into user (email, password, roles) values ('mfreeburn4@jugem.jp', 'mP7\ZBqIm|EWe,&.', 'ROLE_USER');
+insert into user (email, password, roles) values ('ldyneley5@webmd.com', 'kB5|<3w*r{9\_', 'ROLE_USER');
+insert into user (email, password, roles) values ('jcadalleder6@cdbaby.com', 'tL6\3o.Or&+B\7', 'ROLE_USER');
+insert into user (email, password, roles) values ('sbegin7@mlb.com', 'dR9"7rs3_}', 'ROLE_USER');
+insert into user (email, password, roles) values ('pbiasioli8@dailymail.co.uk', 'zU8?''X"Q''/1', 'ROLE_USER');
+insert into user (email, password, roles) values ('dfalconer9@360.cn', 'cM6<nrn<', 'ROLE_USER');
+
+
+
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Chocolate - Milk', description, 85578);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Crackers - Water', description, 161563);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Sesame Seed', description, 49863);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Cloves - Whole', description, 217433);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Apple - Delicious, Red', description, 91514);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Chinese Foods - Thick Noodles', description, 141863);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Crackers - Melba Toast', description, 47972);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Flour - Cake', description, 154071);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Beef - Top Butt', description, 58124);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Sugar - Icing', description, 269384);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Cup - 4oz Translucent', description, 52972);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Cheese - Comte', description, 17131);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Longos - Chicken Cordon Bleu', description, 191581);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Sage - Rubbed', description, 13396);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Ham - Proscuitto', description, 47767);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Flour - Buckwheat, Dark', description, 199470);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Vinegar - Tarragon', description, 203011);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Wine - Zinfandel Rosenblum', description, 124762);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Sprite, Diet - 355ml', description, 141221);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Browning Caramel Glace', description, 250405);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Bread - Frozen Basket Variety', description, 288577);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Cut Wakame - Hanawakaba', description, 175963);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Pasta - Canelloni, Single Serve', description, 101891);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Veal - Brisket, Provimi,bnls', description, 68074);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Salt - Kosher', description, 206631);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Bread Ww Cluster', description, 141155);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Crab - Dungeness, Whole', description, 36392);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Pepper - Red Chili', description, 110239);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Grenadillo', description, 5787);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Remy Red', description, 6132);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Wine - Coteaux Du Tricastin Ac', description, 83524);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Potato - Sweet', description, 4128);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Mushrooms - Black, Dried', description, 102414);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Cod - Salted, Boneless', description, 85181);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Rice - 7 Grain Blend', description, 282195);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Sandwich Wrap', description, 76653);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Lobster - Base', description, 134772);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Cinnamon - Stick', description, 87477);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Wine - Sawmill Creek Autumn', description, 208245);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Soup - Campbells Bean Medley', description, 116452);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Mortadella', description, 83700);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Chilli Paste, Sambal Oelek', description, 99124);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Creme De Banane - Marie', description, 227884);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Flour - Bread', description, 75389);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Chicken - Tenderloin', description, 136396);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Wine - Jaboulet Cotes Du Rhone', description, 254011);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Cookies - Englishbay Oatmeal', description, 246552);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Chips - Potato Jalapeno', description, 70880);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Spic And Span All Purpose', description, 18736);
+insert into product (image, product_name,  description, price) values ('filepath/UUID/fileName', 'Melon - Watermelon, Seedless', description, 279679);
