@@ -50,9 +50,11 @@ public class CartService {
 
                 throw new Exception400("이미 동일한 상품 옵션이 있습니다." + cart.getOptionId());
         }
+        System.out.println("Before save: " + user.getEmail());
 
         userRepository.save(user);
 
+        System.out.println("After save: " + user.getEmail());
 
         // ** 상품 존재 유무
         List<Cart> cartList = saveDTOS.stream().map(cartDTO->{

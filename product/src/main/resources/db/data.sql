@@ -1,15 +1,15 @@
-
-
-insert into user (email, password, roles) values ('test@test.com', '{bcrypt}$2a$10$BH5FAIpqxu4y/4U4QK06GeSkIhDe29qxGe77Ce29Wr4xVOBAJ8rZi', 'ROLE_USER');
-insert into user (email, password, roles) values ('dpafford1@linkedin.com', 'vF8.<>JV', 'ROLE_USER');
-insert into user (email, password, roles) values ('cwarwick2@slideshare.net', 'vU7=W`uzQ7}?A', 'ROLE_USER');
-insert into user (email, password, roles) values ('dcunniffe3@theglobeandmail.com', 'mF0=B\Oq7LQ', 'ROLE_USER');
-insert into user (email, password, roles) values ('mfreeburn4@jugem.jp', 'mP7\ZBqIm|EWe,&.', 'ROLE_USER');
-insert into user (email, password, roles) values ('ldyneley5@webmd.com', 'kB5|<3w*r{9\_', 'ROLE_USER');
-insert into user (email, password, roles) values ('jcadalleder6@cdbaby.com', 'tL6\3o.Or&+B\7', 'ROLE_USER');
-insert into user (email, password, roles) values ('sbegin7@mlb.com', 'dR9"7rs3_}', 'ROLE_USER');
-insert into user (email, password, roles) values ('pbiasioli8@dailymail.co.uk', 'zU8?''X"Q''/1', 'ROLE_USER');
-insert into user (email, password, roles) values ('dfalconer9@360.cn', 'cM6<nrn<', 'ROLE_USER');
+--
+--
+--insert into user (email, password, roles) values ('test@test.com', '{bcrypt}$2a$10$BH5FAIpqxu4y/4U4QK06GeSkIhDe29qxGe77Ce29Wr4xVOBAJ8rZi', 'ROLE_USER');
+--insert into user (email, password, roles) values ('dpafford1@linkedin.com', 'vF8.<>JV', 'ROLE_USER');
+--insert into user (email, password, roles) values ('cwarwick2@slideshare.net', 'vU7=W`uzQ7}?A', 'ROLE_USER');
+--insert into user (email, password, roles) values ('dcunniffe3@theglobeandmail.com', 'mF0=B\Oq7LQ', 'ROLE_USER');
+--insert into user (email, password, roles) values ('mfreeburn4@jugem.jp', 'mP7\ZBqIm|EWe,&.', 'ROLE_USER');
+--insert into user (email, password, roles) values ('ldyneley5@webmd.com', 'kB5|<3w*r{9\_', 'ROLE_USER');
+--insert into user (email, password, roles) values ('jcadalleder6@cdbaby.com', 'tL6\3o.Or&+B\7', 'ROLE_USER');
+--insert into user (email, password, roles) values ('sbegin7@mlb.com', 'dR9"7rs3_}', 'ROLE_USER');
+--insert into user (email, password, roles) values ('pbiasioli8@dailymail.co.uk', 'zU8?''X"Q''/1', 'ROLE_USER');
+--insert into user (email, password, roles) values ('dfalconer9@360.cn', 'cM6<nrn<', 'ROLE_USER');
 
 
 

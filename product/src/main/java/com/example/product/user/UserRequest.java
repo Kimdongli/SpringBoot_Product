@@ -46,8 +46,8 @@ public class UserRequest {
 
                 public User toEntity() {
                         return User.builder()
-                                .email(email)
-                                .password(password)
+                                .email(this.email)
+                                .password(this.password)
                                 .roles(Collections.singletonList("RoLE_USER"))
                                 .build();
                 }

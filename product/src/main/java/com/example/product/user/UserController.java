@@ -22,9 +22,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private final UserRepository userRepository;
-    private final AuthenticationManager authenticationManager;
-    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
     @GetMapping("/join")
     public ModelAndView joinPage() {
@@ -33,59 +31,26 @@ public class UserController {
 
     @PostMapping("/join")
     public ResponseEntity join(@RequestBody @Valid UserRequest.JoinDTO requestDTO, Errors errors){
-
-        // ** Test
-        //joinDTO.setEmail("asdfasdf@green.com");
-        //joinDTO.setPassword("1235");
-
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().body(errors.getAllErrors());
         }
 
-        // Service만들어서 하는게 나중을위해서 더좋음
-        Optional<User> byEmail = userRepository.findByEmail(requestDTO.getEmail());
-
-        // ** 존재한다면 오류 발생
-        if(byEmail.isPresent()){
-            throw new Exception400("이미 존재하는 email 입니다" + requestDTO.getEmail());
+        if (requestDTO.getEmail() == null || requestDTO.getEmail().isEmpty()) {
+            return ResponseEntity.badRequest().body("Email cannot be null or empty");
         }
 
-
-        // ** password 인코딩
-        String encodedPassword = passwordEncoder.encode(requestDTO.getPassword());
-        requestDTO.setPassword(encodedPassword);
-
-        userRepository.save(requestDTO.toEntity());
+        userService.join(requestDTO);
 
         return ResponseEntity.ok(ApiUtils.success(null));
     }
 
-
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid UserRequest.JoinDTO requestDTO, Error error){
-        String jwt = "";
-
-        // ** 인증 작업.
-        try{
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
-                    = new UsernamePasswordAuthenticationToken(requestDTO.getEmail(), requestDTO.getPassword());
-
-
-            // ** anonymousUser = 비인증
-            Authentication authentication =  authenticationManager.authenticate(
-                    usernamePasswordAuthenticationToken
-            );
-
-            // ** 인증 완료 값을 받아온다.
-            CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
-
-            // ** 토큰 발급.
-            jwt  = JwtTokenProvider.create(customUserDetails.getUser());
-
-        }catch (Exception e){
-            // 401 반환.
-            throw new Exception401("인증되지 않음.");
+        if (error != null) {
+            // handle error
         }
+
+        String jwt = userService.login(requestDTO);
 
         return ResponseEntity.ok().header(JwtTokenProvider.HEADER, jwt)
                 .body(ApiUtils.success(null));
