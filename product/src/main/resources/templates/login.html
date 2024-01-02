@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>로그인</title>
+    <style>
+        body {
+            background-color: #354649;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            color: #ffffff;
+        }
+
+        #loginForm, #kakaoForm {
+            width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #loginForm label, #kakaoForm label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #loginForm input[type="email"], #loginForm input[type="password"],
+        #kakaoForm input[type="email"], #kakaoForm input[type="password"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            color: #000000;
+            background-color: #ffffff;
+        }
+
+        #loginForm input[type="submit"] {
+            flex: 0 0 auto;
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 5px;
+            font-size: 13px;
+            color: #354649;
+            line-height: 18px;
+            vertical-align: top;
+            background-color: #6C7A89;
+            font-weight: normal;
+            border: none;
+            cursor: pointer;
+        }
+
+        #loginForm input[type="submit"]:hover {
+            background-color: #AEB6BF;
+        }
+
+        #kakaoForm button {
+            flex: 0 0 auto;
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 5px;
+            font-size: 13px;
+            color: #000000;
+            line-height: 18px;
+            vertical-align: top;
+            background-color: #FFEB00;
+            font-weight: normal;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 10px; /* 버튼 사이에 10px의 여백을 추가하였습니다. */
+        }
+
+        #kakaoForm button:hover {
+            background-color: #FFEB3B;
+        }
+    </style>
+</head>
+<body>
+
+<form id="loginForm">
+    <label for="email">이메일:</label><br>
+    <input type="email" id="email" name="email" required><br>
+    <label for="password">비밀번호:</label><br>
+    <input type="password" id="password" name="password" required><br>
+    <input type="submit" value="로그인">
+</form>
+<form id="kakaoForm">
+    <div class="col">
+        <button type="button" class="btn btn-lg btn-secondary" onclick="location.href='/kakao/oauth'">카카오로 로그인하기</button>
+    </div>
+    <div class="col">
+        <button type="button" class="btn btn-lg btn-secondary" onclick="location.href='/kakao/relogin'">카카오로 다시 로그인하기</button>
+    </div>
+</form>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('loginForm');
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const name = "a";
+            const access_token = "-";
+            const refresh_token = "-";
+            const platform = "user";
+
+            const data = {
+                email,
+                password,
+                name,
+                access_token,
+                refresh_token,
+                platform
+            };
+
+            try {
+                const response = await fetch('/user/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    alert("로그인에 성공했습니다!");
+                    console.log(location.href);
+                    location.href = '/';
+                } else {
+                    console.log(result)
+                    alert("아이디 또는 비밀번호를 잘못 입력했습니다.\n입력하신 내용을 다시 확인해주세요.");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+</script>
+</body>
+</html>

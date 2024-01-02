@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>logout Page Form</title>
+    <style>
+        body {
+            background-color: #354649;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin-bottom: 0px;
+            color: #fff;
+        }
+
+        h1 {
+            color: #E0E7E9;
+        }
+
+        .btn {
+            background-color: #444;
+            color: #E0E7E9;
+            border: none;
+            padding: 5px 10px;
+            margin: 0 2px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #E0E7E9;
+            color: #6C7A89;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            max-width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #6C7A89;
+            border-radius: 5px;
+        }
+
+        .form-container .col {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .form-container button {
+            padding: 8px 12px;
+            border: none;
+            background-color: #6C7A89;
+            color: #E0E7E9;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        const paging = () => {
+            location.href = "/board/paging";
+        }
+
+        async function logout() {
+            try {
+                const response = await fetch('/user/logout', {
+                   method: 'POST',
+                });
+                const result = await response.text();
+
+                alert("로그아웃에 성공했습니다!");
+                console.log(location.href);
+                location.href = result;
+            } catch (error) {
+               console.error('Error:', error);
+            }
+        }
+    </script>
+</head>
+<body>
+<h1>Kakotalk Page</h1>
+<div class="form-container">
+    <div class="col">
+        <button class="btn btn-lg btn-secondary" onclick="logout()">로그아웃</button>
+    </div>
+    <div class="col">
+        <button onclick="paging()"> 쇼핑몰 </button>
+    </div>
+</div>
+</body>
+</html>

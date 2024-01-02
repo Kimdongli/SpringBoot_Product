@@ -2,130 +2,141 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Main Page</title>
+    <title>Title</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #354649;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin-bottom: 0px;
+    }
+    .sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        padding: 48px 0;
+        box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        display: inline-block;
+    }
+    .header {
+        background-color: #6C7A89;
+        padding: 10px;
+        text-align: center;
+    }
+    .menu {
+        padding: 5px;
+        text-align: center;
+        background-color: #6C7A89;
+    }
+    .menu ul {
+        list-style-type: none;
+        padding: 0;
+        display: flex;
+        justify-content: space-around;
+    }
+     .menu ul li a {
+        color: #E0E7E9; /* 이 부분을 원하는 색상 코드로 변경하세요 */
+    }
+    .content {
+        margin-top: 20px;
+        padding: 20px;
+    }
+    .footer {
+    background-color: #6C7A89;
+    text-align: center;
+    padding: 40px;
+    width: 100%;
+        }
+    body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin-bottom: 0px; /* 푸터의 높이와 동일한 값으로 설정하세요 */
+        }
+         .login-register {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+                .login-register button {
+            background-color: #6C7A89;
+            color: #E0E7E9;
+            border: none;
+            padding: 5px 10px;
+            margin: 0 2px;
+            cursor: pointer;
+        }
+        .login-register button:hover {
+            background-color: #E0E7E9;
+            color: #6C7A89;
+        }
+    </style>
 </head>
 <body>
-<h1>Welcome to the Product Management System</h1>
+<!-- Header -->
+<div class="header">
+    <h1>쇼핑몰</h1>
+    <div class="login-register">
+        <button onclick="location.href='/login'">로그인</button>
+        <button onclick="location.href='/join'">회원가입</button>
+    </div>
+</div>
 
-<button onclick="location.href='/products/create'">Create New Product</button>
-<button onclick="location.href='/options/create'">Create New Option</button>
-<button onclick="location.href='/carts/create'">Create New Cart</button>
+<!-- Menu -->
+<div class="menu">
+    <ul>
+        <li><a href="#" onclick="paging()">상품</a></li>
+        <li><a href="#" onclick="paging()">상품</a></li>
+        <li><a href="#" onclick="paging()">상품</a></li>
+    </ul>
+</div>
 
-<h2>Join</h2>
-<form id="joinForm" action="http://localhost:8080/user/join" method="post">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required><br><br>
+<!-- Content -->
+<div class="content">
+    <div class="container mx-auto">
+        <div class="jumbotron text-center">
+            <h1 class="display-4">저희 쇼핑몰에 온것을 환영합니다.</h1>
+            <p class="lead">저희 쇼핑몰은 회원분들한테 싸게 팔기위해 만들었습니다.</p>
+            <hr class="my-4">
+            <p>Click the buttons below to navigate.</p>
+            <p class="lead">
+                <a class="btn btn-primary btn-lg" href="#" role="button" onclick="create()">상품 등록</a>
+                <a class="btn btn-secondary btn-lg" href="#" role="button" onclick="paging()">상품 목록</a>
+            </p>
+        </div>
+    </div>
+</div>
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required><br><br>
-
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required><br><br>
-
-    <input type="submit" value="Submit">
-</form>
-
-<h2>Login</h2>
-<form id="loginForm" action="http://localhost:8080/user/login" method="post">
-    <label for="loginEmail">Email:</label>
-    <input type="email" id="loginEmail" name="email" required><br><br>
-
-    <label for="loginPassword">Password:</label>
-    <input type="password" id="loginPassword" name="password" required><br><br>
-
-    <input type="submit" value="Login">
-</form>
+<div>
+    <img src="/image/dog.jpg" alt="Logo" style="display: block; margin: auto; width:500px;height:500px;">
+</div>
+<!-- Footer -->
+<div class="footer">
+    <p>Copyright &copy; 2023 Kim Dong Hyun's Company</p>
+    <p>서울특별시 강남구 테헤란로 123, 김동현빌딩</p>
+    <p>사업자등록번호: 123-45-67890</p>
+    <p>대표이사: 김동현</p>
+    <p>전화번호: 02-1234-5678</p>
+    <p>Email: donghyun@kdh.com</p>
+</div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const joinForm = document.getElementById('joinForm');
-        joinForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
 
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const username = document.getElementById('username').value;
+   const create = () => {
+      location.href ="/board/create";
+  }
 
-            const data = {
-                email,
-                password,
-                username
-            };
-
-            try {
-                const response = await fetch('http://localhost:8080/user/join', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    alert("회원가입에 성공했습니다!");
-                } else {
-                    alert("Error: " + result.error.message);
-                }
-
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        });
-
-const loginForm = document.getElementById('loginForm');
-loginForm.addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-
-    const data = {
-        email,
-        password
-    };
-
-    try {
-        const response = await fetch('http://localhost:8080/user/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-
-        const token = response.headers.get('Authorization');
-        if (token) {
-            // 토큰을 로컬 스토리지에 저장
-            window.localStorage.setItem('jwtToken', token);
-        }
-
-        const result = await response.json();
-
-        if (result.success) {
-            alert("로그인에 성공했습니다!");
-        } else {
-            alert("Error: " + result.error.message);
-        }
-
-    } catch (error) {
-        console.error('Error:', error);
-    }
-});
-
-    const token = window.localStorage.getItem('jwtToken');
-fetch('http://localhost:8080/carts/create', {
-    method: 'GET',
-    headers: {
-        'Authorization': token,
-        'Content-Type': 'application/json'
-    }
-})
-.then(response => response.json())
-.then(data => console.log('Success:', data))
-.catch(error => console.error('Error:', error));
+  const paging = () => {
+      location.href ="/board/paging";
+  }
 </script>
 
+<!-- Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

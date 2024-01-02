@@ -51,7 +51,7 @@ public class ProductController {
         return ResponseEntity.ok(apiResult);
     }
 
-    @PutMapping("/products/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id,@RequestBody ProductResponse.CreateDTO updateDTO){
         ProductResponse.FindByIdDTO updatedProduct = productService.updateProduct(id, updateDTO);
         ApiUtils.ApiResult<?> apiResult = ApiUtils.success(updatedProduct);

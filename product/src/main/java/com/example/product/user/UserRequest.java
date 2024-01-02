@@ -29,7 +29,8 @@ public class UserRequest {
             @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "이메일 형식으로 작성해주세요")
             private String email;
 
-
+            @NotEmpty
+            private String name;
 
             @NotEmpty
             @Size(min = 8, max = 20, message = "8자 이상 20자 이내로 작성 가능합니다.")
@@ -44,11 +45,20 @@ public class UserRequest {
             @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@#$%^&+=!~`<>,./?;:'\"\\[\\]{}\\\\()|_-])\\S*$", message = "영문, 숫자, 특수문자가 포함되어야하고 공백이 포함될 수 없습니다.")
                 private String password;
 
+            @NotEmpty
+            private String access_token;
+
+            @NotEmpty
+            private String refresh_token;
+
                 public User toEntity() {
                         return User.builder()
-                                .email(this.email)
-                                .password(this.password)
-                                .roles(Collections.singletonList("RoLE_USER"))
+                                .email(email)
+                                .password(password)
+                                .name(name)
+                                .roles(Collections.singletonList("ROLE_USER"))
+                                .access_token(null)
+                                .refresh_token(null)
                                 .build();
                 }
         }
