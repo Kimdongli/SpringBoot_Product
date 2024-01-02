@@ -10,20 +10,19 @@
             color: #ffffff;
         }
 
-        #loginForm, #kakaoForm {
+        #loginForm {
             width: 300px;
             margin: 0 auto;
             padding: 20px;
             border-bottom: 1px solid #ddd;
         }
 
-        #loginForm label, #kakaoForm label {
+        #loginForm label {
             display: block;
             margin-bottom: 10px;
         }
 
-        #loginForm input[type="email"], #loginForm input[type="password"],
-        #kakaoForm input[type="email"], #kakaoForm input[type="password"] {
+        #loginForm input[type="email"], #loginForm input[type="password"]{
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 3px;
@@ -51,25 +50,6 @@
             background-color: #AEB6BF;
         }
 
-        #kakaoForm button {
-            flex: 0 0 auto;
-            display: inline-block;
-            padding: 4px 14px;
-            border-radius: 5px;
-            font-size: 13px;
-            color: #000000;
-            line-height: 18px;
-            vertical-align: top;
-            background-color: #FFEB00;
-            font-weight: normal;
-            border: none;
-            cursor: pointer;
-            margin-bottom: 10px; /* 버튼 사이에 10px의 여백을 추가하였습니다. */
-        }
-
-        #kakaoForm button:hover {
-            background-color: #FFEB3B;
-        }
     </style>
 </head>
 <body>
@@ -80,14 +60,6 @@
     <label for="password">비밀번호:</label><br>
     <input type="password" id="password" name="password" required><br>
     <input type="submit" value="로그인">
-</form>
-<form id="kakaoForm">
-    <div class="col">
-        <button type="button" class="btn btn-lg btn-secondary" onclick="location.href='/kakao/oauth'">카카오로 로그인하기</button>
-    </div>
-    <div class="col">
-        <button type="button" class="btn btn-lg btn-secondary" onclick="location.href='/kakao/relogin'">카카오로 다시 로그인하기</button>
-    </div>
 </form>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -100,15 +72,13 @@
             const name = "a";
             const access_token = "-";
             const refresh_token = "-";
-            const platform = "user";
 
             const data = {
                 email,
                 password,
                 name,
                 access_token,
-                refresh_token,
-                platform
+                refresh_token
             };
 
             try {

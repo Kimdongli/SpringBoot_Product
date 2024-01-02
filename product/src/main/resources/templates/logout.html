@@ -57,8 +57,8 @@
         }
     </style>
     <script>
-        const paging = () => {
-            location.href = "/board/paging";
+        const product = () => {
+            location.href = "/products/create";
         }
 
         async function logout() {
@@ -78,13 +78,13 @@
     </script>
 </head>
 <body>
-<h1>Kakotalk Page</h1>
+<h1>product Page</h1>
 <div class="form-container">
     <div class="col">
         <button class="btn btn-lg btn-secondary" onclick="logout()">로그아웃</button>
     </div>
     <div class="col">
-        <button onclick="paging()"> 쇼핑몰 </button>
+        <button onclick="product()"> 쇼핑몰 상품등록 </button>
     </div>
 </div>
 </body>
