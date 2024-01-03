@@ -51,7 +51,6 @@ public class ProductService {
         Product product = new Product();
         product.setProductName(createDTO.getProductName());
         product.setDescription(createDTO.getDescription());
-        product.setImage(createDTO.getImage());
         product.setPrice(createDTO.getPrice());
 
         productRepository.save(product);
@@ -72,7 +71,6 @@ public class ProductService {
 
         product.setProductName(updateDTO.getProductName());
         product.setDescription(updateDTO.getDescription());
-        product.setImage(updateDTO.getImage());
         product.setPrice(updateDTO.getPrice());
 
         product = productRepository.save(product);

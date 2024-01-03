@@ -1,6 +1,7 @@
 package com.example.product.product;
 
 import com.example.product.option.Option;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,14 +29,19 @@ public class Product {
     @Column(length = 500, nullable = false)
     private String description;
 
+    // ** 가격
+    @Column(nullable = false)
+    private int price;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.PERSIST)
     private List<Option> options = new ArrayList<>();
 
-    // ** 이미지 정보
-    @Column(length = 100)
-    private String image;
-
-    // ** 가격
-    private int price;
-
+    @Builder
+    public Product(Long id, String productName, String description, int price, List<Option> options) {
+        this.id = id;
+        this.productName = productName;
+        this.description = description;
+        this.price = price;
+        this.options = options;
+    }
 }

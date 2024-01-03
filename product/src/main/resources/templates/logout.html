@@ -61,6 +61,9 @@
             location.href = "/products/create";
         }
 
+        const option = () =>{
+            location.href = "/options/create"
+        }
         async function logout() {
             try {
                 const response = await fetch('/user/logout', {
@@ -85,6 +88,9 @@
     </div>
     <div class="col">
         <button onclick="product()"> 쇼핑몰 상품등록 </button>
+    </div>
+    <div class="col">
+        <button onclick="option()"> 쇼핑몰 상품옵션등록 </button>
     </div>
 </div>
 </body>

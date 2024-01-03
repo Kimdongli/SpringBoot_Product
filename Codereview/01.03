@@ -1,0 +1,67 @@
+### 상품 등록 및 옵션추가
+
+현재 상품등록과 옵션을 따로 뷰를 뒀는데 합쳐서 둬야할것같아서 합치기위해 html,JavaScript를 만지고있습니다.
+
+```html
+<script>
+     function createProductAndOption(event) {
+         event.preventDefault();
+
+         var productName = document.getElementById('productName').value;
+         var description = document.getElementById('description').value;
+         var price = document.getElementById('price').value;
+         var optionName = document.getElementById('optionName').value;
+         var optionPrice = document.getElementById('optionPrice').value;
+         var quantity = document.getElementById('quantity').value;
+
+         fetch('/products/save', {
+             method: 'POST',
+             headers: {
+                 'Content-Type': 'application/json'
+             },
+             body: JSON.stringify({
+                 productName: productName,
+                 description: description,
+                 price: price
+             })
+         })
+             .then(response => {
+                 if (!response.ok) {
+                     return response.json();
+                 } else {
+                     return response.json().then(data => {
+                         var productId = data.id; // 상품 등록 후 반환된 상품 ID를 사용합니다.
+
+                         fetch('/options/save', {
+                             method: 'POST',
+                             headers: {
+                                 'Content-Type': 'application/json'
+                             },
+                             body: JSON.stringify({
+                                 optionName: optionName,
+                                 price: optionPrice,
+                                 quantity: quantity,
+                                 product: productId
+                             })
+                         })
+                             .then(response => {
+                                 if (response.ok) {
+                                     window.location.href = '/';
+                                 } else {
+                                     return response.json();
+                                 }
+                             })
+                             .catch((error) => {
+                                 console.error('Error:', error);
+                             });
+                     });
+                 }
+             })
+             .catch((error) => {
+                 console.error('Error:', error);
+             });
+     }
+ </script>
+ ```
+
+ 현재 내가 바꾼 JavaScript인데 옵션추가쪽에서 오류가뜨고있으니 내일 고쳐봐야할것같아.

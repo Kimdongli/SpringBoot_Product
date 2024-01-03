@@ -2,6 +2,7 @@ package com.example.product.user;
 
 
 import com.example.product.cart.Cart;
+import com.example.product.order.Order;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,8 +44,10 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
     private List<Cart> carts = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
+    private List<Order> orders = new ArrayList<>();
     @Builder
-    public User(Long id, String email, String password,String name, String access_token, String refresh_token, List<String> roles,String platform,List<Cart> carts) {
+    public User(Long id, String email, String password,String name, String access_token, String refresh_token, List<String> roles,List<Cart> carts,List<Order> orders) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -53,7 +56,7 @@ public class User {
         this.refresh_token = refresh_token;
         this.roles = roles;
         this.carts = carts;
-
+        this.orders = orders;
     }
     public void setAccess_token(String access_token) {
         this.access_token = access_token;

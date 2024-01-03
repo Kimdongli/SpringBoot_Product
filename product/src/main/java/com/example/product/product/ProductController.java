@@ -28,11 +28,12 @@ public class ProductController {
 
     // ** 개인 상품 확인
     @PostMapping("/save")
-    public ResponseEntity<?> createProduct(@RequestBody ProductResponse.CreateDTO createDTO){
+    public ResponseEntity<ApiUtils.ApiResult<Long>> createProduct(@RequestBody ProductResponse.CreateDTO createDTO){
         // 생성된 제품의 정보를 반환합니다.
         ProductResponse.FindByIdDTO createdProduct = productService.createProduct(createDTO);
+        Long productId = createdProduct.getId();
         // API 호출이 성공했음
-        ApiUtils.ApiResult<?> apiResult = ApiUtils.success(createdProduct);
+        ApiUtils.ApiResult<Long> apiResult = ApiUtils.success(productId);
         // HTTP 상태 코드 200(ok)와 함께 apiResult를 HTTP 응답 생성.
         return ResponseEntity.ok(apiResult);
     }

@@ -8,7 +8,7 @@
 
             var productName = document.getElementById('productName').value;
             var description = document.getElementById('description').value;
-            var image = document.getElementById('image').value;
+            // var image = document.getElementById('image').value;
             var price = document.getElementById('price').value;
 
             fetch('/products/save', {
@@ -19,13 +19,13 @@
                 body: JSON.stringify({
                     productName: productName,
                     description: description,
-                    image: image,
+                    // image: image,
                     price: price
                 })
             })
             .then(response => {
                 if (response.ok) {
-                    window.location.href = '/index.html'; // ** 성공 시 index.html로 이동
+                    window.location.href = '/'; // ** 성공 시 index.html로 이동
                 } else {
                     return response.json();
                 }
@@ -46,8 +46,8 @@
     <label for="description">Description:</label><br>
     <textarea id="description" name="description"></textarea><br>
 
-    <label for="image">Image URL:</label><br>
-    <input type="text" id="image" name="image"><br>
+<!--    <label for="image">Image URL:</label><br>-->
+<!--    <input type="text" id="image" name="image"><br>-->
 
     <label for="price">Price:</label><br>
     <input type="number" id="price" name="price"><br>

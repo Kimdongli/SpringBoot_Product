@@ -33,7 +33,6 @@ public class ProductResponse {
             this.id = product.getId();
             this.productName = product.getProductName();
             this.description = product.getDescription();
-            this.image = product.getImage();
             this.price = product.getPrice();
         }
     }
@@ -62,7 +61,6 @@ public class ProductResponse {
             this.id = product.getId();
             this.productName = product.getProductName();
             this.description = product.getDescription();
-            this.image = product.getImage();
             this.price = product.getPrice();
             this.optionList = optionList.stream().map(OptionDTO::new)
                     .collect(Collectors.toList());
